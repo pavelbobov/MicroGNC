@@ -1,6 +1,14 @@
 /*
- * Example Arduino sketch
+ * CourseComputer.ino
  * 
+ * Example Arduino sketch for MicroGNC library
+ *
+ * Exchanges NMEA sentences among GPS, Serial, and CourseComputer. 
+ * Send $GPWPL sentence with waypoint location to the serial. 
+ * CourseComputer will compute direct course to the waypoint 
+ * from the current location obtained from GPS, and will send it to 
+ * the Serial as $GPBWC sentence.  
+ *
  * (C) Copyright 2016 Pavel Bobov.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
