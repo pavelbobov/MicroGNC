@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pavelbobov/MicroGNC.svg?branch=master)](https://travis-ci.org/pavelbobov/MicroGNC)
+
 # MicroGNC
 Guidance, Navigation and Control Library for Microcontrollers
 

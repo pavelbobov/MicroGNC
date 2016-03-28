@@ -10,12 +10,10 @@ before_install:
   - wget https://github.com/PaulStoffregen/Time/archive/v1.5.tar.gz
   - tar xf v1.5.tar.gz
   - sudo mv Time-1.5 /usr/local/share/arduino/libraries/Time
-  - sudo ls /usr/local/share/arduino/libraries
-install:
+  install:
   - ln -s $PWD /usr/local/share/arduino/libraries/MicroGNC
 script:
-  - sudo ls /usr/local/share/arduino/libraries/Time
-  - arduino --verify --board arduino:avr:uno $PWD/examples/CourseComputer/CourseComputer.ino
+    - arduino --verify --board arduino:avr:uno $PWD/examples/CourseComputer/CourseComputer.ino
 notifications:
   email:
     on_success: change
