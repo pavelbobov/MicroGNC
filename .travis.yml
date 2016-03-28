@@ -13,8 +13,8 @@ before_install:
   - sudo ls /usr/local/share/arduino/libraries
 install:
   - ln -s $PWD /usr/local/share/arduino/libraries/MicroGNC
-  - arduino --install-library "Time"
 script:
+  - sudo ls /usr/local/share/arduino/libraries/Time
   - arduino --verify --board arduino:avr:uno $PWD/examples/CourseComputer/CourseComputer.ino
 notifications:
   email:
