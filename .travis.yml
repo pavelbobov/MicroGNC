@@ -3,7 +3,8 @@ sudo: false
 before_install:
   - source <(curl -SLs https://raw.githubusercontent.com/adafruit/travis-ci-arduino/master/install.sh)
 install:
-  - arduino --install-library "MicroGNC Library"
+  - ln -s $PWD /usr/local/share/arduino/libraries/MicroGNC
+  - arduino --install-library "Time"
 script:
   - build_main_platforms
 notifications:
