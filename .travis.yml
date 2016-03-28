@@ -10,6 +10,7 @@ before_install:
   - wget https://github.com/PaulStoffregen/Time/archive/v1.5.tar.gz
   - tar xf v1.5.tar.gz
   - sudo mv Time-1.5 /usr/local/share/arduino/libraries/Time
+  - sudo ls /usr/local/share/arduino/libraries
 install:
   - ln -s $PWD /usr/local/share/arduino/libraries/MicroGNC
   - arduino --install-library "Time"
