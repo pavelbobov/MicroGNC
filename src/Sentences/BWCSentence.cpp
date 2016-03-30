@@ -21,7 +21,7 @@
 #include <math.h>
 #include <Time.h>
 
-#include "../Sentences/StrUtils.h"
+#include "StrUtils.h"
 #include "Sentences.h"
 
 BWCSentence::BWCSentence() : Sentence("GP", NMEA_BWC) {

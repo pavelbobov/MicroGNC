@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "../Sentences/StrUtils.h"
+#include "StrUtils.h"
 #include "Sentences.h"
 
 const float DEGREES_IN_MINUTE = 1.0/60.0;

@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../Sentences/StrUtils.h"
+#include "StrUtils.h"
 #include "Sentences.h"
   
 WPLSentence::WPLSentence() : Sentence("GP", NMEA_WPL) {

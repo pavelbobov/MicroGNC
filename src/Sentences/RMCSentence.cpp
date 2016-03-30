@@ -21,7 +21,7 @@
 #include <math.h>
 #include <Time.h>
 
-#include "../Sentences/StrUtils.h"
+#include "StrUtils.h"
 #include "Sentences.h"
 
 RMCSentence::RMCSentence() : Sentence("GP", NMEA_RMC) {
