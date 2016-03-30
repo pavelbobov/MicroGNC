@@ -17,8 +17,8 @@
  */
  
 #include <string.h>
-#include <stdlib.h>
 #include <math.h>
+
 #include "StrUtils.h"
 
 char toHex(unsigned char c) {

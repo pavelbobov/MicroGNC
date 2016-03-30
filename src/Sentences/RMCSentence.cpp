@@ -20,10 +20,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include <Time.h>
-#include "Nmea.h"
-#include "StrUtils.h"
 
-RMCSentence::RMCSentence() : NMEASentence("GP", NMEA_RMC) {
+#include "StrUtils.h"
+#include "Sentences.h"
+
+RMCSentence::RMCSentence() : Sentence("GP", NMEA_RMC) {
 }
 
 RMCSentence::~RMCSentence() {
