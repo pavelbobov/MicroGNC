@@ -1,5 +1,5 @@
- /*
- * BWCSentence.cpp
+/*
+ * RMCSentence.cpp
  * 
  * (C) Copyright 2016 Pavel Bobov.
  *
@@ -20,17 +20,17 @@
 #include <stdlib.h>
 #include <math.h>
 #include <Time.h>
-#include "Nmea.h"
-#include "StrUtils.h"
 
-BWCSentence::BWCSentence() : NMEASentence("GP", NMEA_BWC) {
-   waypointId[0] = '\0';
+#include "../Sentences/StrUtils.h"
+#include "Sentences.h"
+
+RMCSentence::RMCSentence() : Sentence("GP", NMEA_RMC) {
 }
 
-BWCSentence::~BWCSentence() {
+RMCSentence::~RMCSentence() {
 }
 
-char* BWCSentence::get(char str[], size_t buflen) const {
+char* RMCSentence::get(char str[], size_t buflen) const {
   if (str == NULL || buflen < NMEA_MAX_LENGTH)
     return NULL;
     
@@ -45,43 +45,44 @@ char* BWCSentence::get(char str[], size_t buflen) const {
 
   addComma(str);
   
-  pointToString(waypoint, strchr(str, '\0'));
+  strcat(str, fix ? "A" : "V");
 
   addComma(str);
 
-  if (bearingTrue >= 0)
-    ftoa(bearingTrue, strchr(str, '\0'), 2);
+  pointToString(position, strchr(str, '\0'));
 
   addComma(str);
-    
-  strcat(str, "T");
-
-  addComma(str);
-
-  if (bearingMagnetic >= 0)
-    ftoa(bearingMagnetic, strchr(str, '\0'), 2);
-
-  addComma(str);
-    
-  strcat(str, "M");
-
-  addComma(str);
-
-  if (distance >= 0)
-    ftoa(distance, strchr(str, '\0'), 2);
   
-  addComma(str);
-
-  strcat(str, "N");
+  ftoa(speed, strchr(str, '\0'), 2);
 
   addComma(str);
+    
+  ftoa(course, strchr(str, '\0'), 2);
 
-  strcat(str, waypointId);
+  addComma(str);
+    
+  long fulldate = datetime.Day * 10000L + datetime.Month * 100L + (datetime.Year - 30);
+  zeropad(ltoa(fulldate, strchr(str, '\0'), 10), 6);
+
+  addComma(str);
+
+  ftoa(fabs(variation), strchr(str, '\0'), 1);
+
+  addComma(str);
+
+  if (variation > 0)
+    strcat(str, EAST);
+  else
+    strcat(str, WEST);
+
+  addComma(str);
+  
+  strcat(str, "D");
   
   return addChecksum(str);
 }
 
-bool BWCSentence::set(const char nmea[]) {
+bool RMCSentence::set(const char nmea[]) {
   if (!valid(nmea))
     return false;
 
@@ -95,37 +96,48 @@ bool BWCSentence::set(const char nmea[]) {
 
   p = parseTime(p, datetime, milliseconds);
   
-  p = parsePoint(p, waypoint);
+  if (*p == 'A') 
+    fix = true;
+  else if (*p == 'V')
+    fix = false;
+  else
+    return false;
+
+  p = nextToken(p);
+
+  p = parsePoint(p, position);
 
   if (',' != *p)
-    bearingTrue = atof(p);
-  else 
-    bearingTrue = -1;
+    speed = atof(p);
   
-  p = nextToken(p);
-  p = nextToken(p);
-
-  if (',' != *p)
-    bearingMagnetic = atof(p);
-  else 
-    bearingMagnetic = -1;
-    
-  p = nextToken(p);
-  p = nextToken(p);
-
-  if (',' != *p)
-    distance = atof(p);
-  else 
-    distance = -1;
-
-  p = nextToken(p);
   p = nextToken(p);
   
   if (',' != *p)
-    strncpy(waypointId, p, strchr(p, '*') - p);
-  else 
-    waypointId[0] = '\0';
+    course = atof(p);
+  
+  p = nextToken(p);
+  
+  if (',' != *p) {
+    uint32_t fulldate = atol(p);
+    datetime.Day = fulldate / 10000L;
+    datetime.Month = (fulldate % 10000L) / 100L;
+    datetime.Year = 30 + (fulldate % 100L);
+  }
+
+  p = nextToken(p);
+
+  if (',' != *p)
+    variation = atof(p);
+
+  p = nextToken(p);
+
+  if (*p == *WEST) 
+    variation = -variation;
   
   return true;
+}
+
+time_t RMCSentence::makeTime() {
+  return ::makeTime(datetime);
 }
 

@@ -23,24 +23,25 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include "Nmea.h"
-#include "StrUtils.h"
+
+#include "../Sentences/StrUtils.h"
+#include "Sentences.h"
 
 const float DEGREES_IN_MINUTE = 1.0/60.0;
 const float MINUTES_IN_DEGREE = 60.0;
 
-NMEASentence::NMEASentence(const char talker[], const char tag[]) : 
+Sentence::Sentence(const char talker[], const char tag[]) : 
   talker(talker), tag(tag) {
 }
 
-NMEASentence::~NMEASentence() {
+Sentence::~Sentence() {
 }
 
-bool NMEASentence::matches(const char str[]) {
+bool Sentence::matches(const char str[]) {
   return strncmp(str + 1 + strlen(talker), tag, strlen(tag)) == 0;
 }
 
-const char* NMEASentence::parsePoint(const char* str, Point& point) {
+const char* Sentence::parsePoint(const char* str, Point& point) {
   const char* p = str;
   
   if (',' != *p)
@@ -65,7 +66,7 @@ const char* NMEASentence::parsePoint(const char* str, Point& point) {
   return nextToken(p);
 }
 
-char* NMEASentence::pointToString(const Point& point, char str[]) {
+char* Sentence::pointToString(const Point& point, char str[]) {
   decimalDegreesToString(fabs(point.latitude), str, 9);
 
   addComma(str);
@@ -89,7 +90,7 @@ char* NMEASentence::pointToString(const Point& point, char str[]) {
   return strchr(str, '\0');
 }
 
-const char* NMEASentence::parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds) {
+const char* Sentence::parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds) {
   float timef = atof(str);
   
   uint32_t time = timef;
@@ -102,7 +103,7 @@ const char* NMEASentence::parseTime(const char str[], tmElements_t& datetime, ui
   return nextToken(str);
 }
 
-char* NMEASentence::timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]) {
+char* Sentence::timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]) {
   float timef = datetime.Hour * 10000.0  + datetime.Minute * 100.0 + datetime.Second + milliseconds * 0.001;
   
   zeropad(ftoa(timef, str, 3), 10);
@@ -110,7 +111,7 @@ char* NMEASentence::timeToString(const tmElements_t& datetime, uint16_t millisec
   return strchr(str, '\0');
 }
 
-bool NMEASentence::valid(const char nmea[]) {
+bool Sentence::valid(const char nmea[]) {
   if (!nmea) 
     return false;
     
@@ -127,7 +128,7 @@ bool NMEASentence::valid(const char nmea[]) {
   return !sum;
 }
 
-char* NMEASentence::addChecksum(char str[]) {
+char* Sentence::addChecksum(char str[]) {
   unsigned char parity = 0;
 
   char* p = str + 1;
@@ -143,13 +144,13 @@ char* NMEASentence::addChecksum(char str[]) {
   return str;
 }
 
-char* NMEASentence::decimalDegreesToString(float dd, char str[], size_t len) {
+char* Sentence::decimalDegreesToString(float dd, char str[], size_t len) {
   float f = floor(dd) * 100.0 + fmod(dd, 1.0) * MINUTES_IN_DEGREE;
 
   return zeropad(ftoa(f, str, 4), len);
 }
 
-float NMEASentence::stringToDecimalDegrees(const char str[]) {
+float Sentence::stringToDecimalDegrees(const char str[]) {
   float f = atof(str);
 
   return floor(f * 0.01) + fmod(f, 100.0) * DEGREES_IN_MINUTE;

@@ -19,6 +19,8 @@
 #ifndef _STRUTILS_H_
 #define _STRUTILS_H_
 
+#include <stdlib.h>
+
 /*
  * Converts numbers 0-15 to hex digit characters '0'-'F'
  * 

@@ -25,60 +25,7 @@
 #define MAX_MESSAGE_LENGTH  83
 
 #include <stdlib.h>
-
-class MessageBus;
-
-/*
- * Base class for MessageBus instruments such as sensors, filters
- * controllers, actuators, etc.
- * 
- */
-class Instrument {
-protected:
-  const char* id;
-    
-public:
-  /*
-   * Constructor
-   * 
-   * @param id instrument ID
-   */
-  Instrument(const char id[]) : id(id) {}
-
-  /*
-   * Destructor
-   */
-  virtual ~Instrument() {}
-    
-  /*
-   * Returns instrument ID
-   */
-  const char* getId() { return id; }
-
-  /*
-   * Called by the message bus when the instrument is subscribed to the bus. 
-   * 
-   * @param bus MessageBus pointer
-   */
-  virtual void setMessageBus(const MessageBus* /* bus */) {}
-  
-  /*
-   * Gets message from instrument
-   * 
-   * @param  message message buffer
-   * @param  maxSize message buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 caracters)
-   * @return message string or NULL if no messages are available
-   */
-  virtual char* getMessage(char[] /* message */, size_t /* maxSize */) { return NULL; }
-
-  /*
-   * Puts message to the instrument
-   * 
-   * @param  message message
-   * @return true if instrument accepted the message
-   */
-  virtual bool putMessage(const char[] /* message */) { return false; }
-};
+#include "Instrument.h"
 
 /*
  * A bus used to exchange messages among instruments

@@ -17,9 +17,9 @@
  */
  
 #include <string.h>
-#include <stdlib.h>
 #include <math.h>
-#include "StrUtils.h"
+
+#include "../Sentences/StrUtils.h"
 
 char toHex(unsigned char c) {
   return c < 10 ? '0' + c : 'A' + c - 10;

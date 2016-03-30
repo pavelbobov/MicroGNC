@@ -1,8 +1,9 @@
 #include <string.h>
-#include "Nmea.h"
-#include "StrUtils.h"
+
+#include "../Sentences/StrUtils.h"
+#include "Sentences.h"
   
-WPLSentence::WPLSentence() : NMEASentence("GP", NMEA_WPL) {
+WPLSentence::WPLSentence() : Sentence("GP", NMEA_WPL) {
   name[0] = '\0';
 }
   

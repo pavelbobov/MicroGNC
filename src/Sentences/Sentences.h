@@ -1,13 +1,9 @@
 /*
- * Nmea.h
+ * Sentences.h
  * 
- * Parsing and construction of some NMEA 0183 and proprietary NMEA sentences .
+ * Parsing and construction of some NMEA 0183 and proprietary sentences.
  * 
- * NMEA 0183 is a proprietary protocol issued by the 
- * National Marine Electronics Association 
- * for use in boat navigation and control systems. 
- * 
- * The implementation is based on publicly available sources, 
+ * The specification of NMEA sentences is based on publicly available sources,
  * such as http://www.catb.org/gpsd/NMEA.html. 
  *  
  * (C) Copyright 2016 Pavel Bobov.
@@ -25,19 +21,21 @@
  * limitations under the License.
  */
  
-#ifndef _NMEA_H_
-#define _NMEA_H_
+#ifndef _SENTENCES_H_
+#define _SENTENCES_H_
 
 #include <stdlib.h>
 #include "Time.h"
-#include "Geo.h"
 
-//NMEA sentence tags
+#include "../Sentences/Geo.h"
+
+
+//Sentence tags
 #define NMEA_RMC "RMC"
 #define NMEA_WPL "WPL"
 #define NMEA_BWC "BWC"
 
-//NMEA code strings
+//Code strings
 #define NORTH "N"
 #define SOUTH "S"
 #define EAST  "E"
@@ -48,11 +46,10 @@
 
 
 /*
- * Base class for NMEA sentences
+ * Base class for sentences
  * 
- * See http://www.catb.org/gpsd/NMEA.html for details.
  */
-class NMEASentence {
+class Sentence {
 public:
   /*
    * Constructor
@@ -61,11 +58,11 @@ public:
    * @param tag tag
    */
 
-  NMEASentence(const char talker[], const char tag[]);
+  Sentence(const char talker[], const char tag[]);
   /*
    * Destructor
    */
-  virtual ~NMEASentence();
+  virtual ~Sentence();
 
   /*
    * Implementations of this method must copy NMEA sentence to the specified buffer
@@ -136,6 +133,7 @@ protected:
 
 /*
  * RMC - Recommended Minimum Navigation Information
+ *
  * This is one of the sentences commonly emitted by GPS units.
  *                                                           12
  *        1         2 3       4 5        6  7   8   9    10 11|  13
@@ -161,7 +159,7 @@ protected:
  *
  * Example: $GPRMC,194509.000,A,4042.6142,N,07400.4168,W,2.03,221.11,160412,,,A*77
  */
-class RMCSentence : public NMEASentence {   
+class RMCSentence : public Sentence {   
 public:
   tmElements_t  datetime;
   uint16_t      milliseconds  = 0;
@@ -182,6 +180,7 @@ public:
 
 /*
  * WPL - Waypoint Location
+ *
  *       1       2 3        4 5    6
  *       |       | |        | |    |
  * $--WPL,llll.ll,a,yyyyy.yy,a,c--c*hh<CR><LF>
@@ -196,7 +195,7 @@ public:
  * 
  * Example: $GPWPL,3404.3640,N,11708.7529,W,TEST*4B
  */
-class WPLSentence : public NMEASentence {
+class WPLSentence : public Sentence {
 public:  
   Point  waypoint;
   char   name[NMEA_MAX_WAYPOINT_NAME_LENGTH + 1];
@@ -234,7 +233,7 @@ public:
  * Example 1: $GPBWC,081837,,,,,,T,,M,,N,*13
  * Example 2: $GPBWC,220516,5130.02,N,00046.34,W,213.8,T,218.0,M,0004.6,N,EGLM*11
  */
-class BWCSentence : public NMEASentence {   
+class BWCSentence : public Sentence {   
 public:
   tmElements_t  datetime;
   uint16_t      milliseconds  = 0;
@@ -251,5 +250,5 @@ public:
   bool   set(const char str[]);
 };
 
-#endif /* _NMEA_H_ */ 
+#endif /* _SENTENCES_H_ */
 

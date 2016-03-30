@@ -12,12 +12,14 @@ Autopilot components for model boats, cars, planes, rockets, and everything else
 Currently Supported Controllers:
 * Arduino
 
+Dependencies
+* [Time library](https://github.com/PaulStoffregen/Time)
+
 The library currently includes:
 * Latitude/Longitude point with methods for computing bearing and distance on great-circle.  
-* Classes for parsing and construction of some NMEA 0183 and proprietary NMEA sentences. (NMEA 0183 is a proprietary protocol issued by the National Marine Electronics Association for use in boat navigation and control systems.)
+* Classes for parsing and construction of some NMEA 0183 and proprietary sentences. (NMEA 0183 is a proprietary protocol issued by the National Marine Electronics Association for use in boat navigation and control systems.)
 * Base class for instruments, such as sensors, sensor filter, controllers, and actuators.  
 * Message bus for exchanging messages among instruments. (Conceptually similar to NMEA 'backbone')
 * StremTalker class for reading/writing NMEA sentences from/to serial interface.
 * CourseComputer class for computing direct course from current location to a waypoint.
-
  

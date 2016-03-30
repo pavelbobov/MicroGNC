@@ -43,8 +43,6 @@ bool MessageBus::subscribe(Instrument* instrument) {
     
   instruments[numInstruments++] = instrument; 
 
-  instrument->setMessageBus(this);
-
   return true;
 }
 

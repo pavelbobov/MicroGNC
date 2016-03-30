@@ -15,8 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "../Sentences/Geo.h"
+
 #include <math.h> 
-#include "Geo.h"
 
 const float earthR = 6371009;
 const float degToRad = 0.01745329251994;//M_PI / 180;
