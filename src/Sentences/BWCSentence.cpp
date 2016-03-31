@@ -21,8 +21,8 @@
 #include <math.h>
 #include <Time.h>
 
+#include "Nmea.h"
 #include "StrUtils.h"
-#include "Sentences.h"
 
 BWCSentence::BWCSentence() : Sentence("GP", NMEA_BWC) {
    waypointId[0] = '\0';

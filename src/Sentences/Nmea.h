@@ -1,7 +1,7 @@
 /*
- * Sentences.h
+ * Nmea.h
  * 
- * Parsing and construction of some NMEA 0183 and proprietary sentences.
+ * Parsing and construction of some NMEA 0183 sentences.
  * 
  * The specification of NMEA sentences is based on publicly available sources,
  * such as http://www.catb.org/gpsd/NMEA.html. 
@@ -27,7 +27,8 @@
 #include <stdlib.h>
 #include "Time.h"
 
-#include "../Sentences/Geo.h"
+#include "Geo.h"
+#include "Sentence.h"
 
 
 //Sentence tags
@@ -43,93 +44,6 @@
 
 #define NMEA_MAX_LENGTH  83
 #define NMEA_MAX_WAYPOINT_NAME_LENGTH 6
-
-
-/*
- * Base class for sentences
- * 
- */
-class Sentence {
-public:
-  /*
-   * Constructor
-   * 
-   * @param talker talker ID
-   * @param tag tag
-   */
-
-  Sentence(const char talker[], const char tag[]);
-  /*
-   * Destructor
-   */
-  virtual ~Sentence();
-
-  /*
-   * Implementations of this method must copy NMEA sentence to the specified buffer
-   * 
-   * @param buffer buffer
-   * @param buflen buffer size. Recommended size is NMEA_MAX_LENGTH.
-   * @return NMEA sentence or NULL if the buffer size is insufficient. 
-   */
-  virtual char* get(char buffer[], size_t buflen) const = 0;
-
-  /*
-   * Implementations of this method must change the sentence to the specified string
-   * if the string is a valid NMEA sentence and the sentence tag matches the tag of the string.
-   * 
-   * @param str NMEA string
-   * @return true if the sentence was changed
-   */
-  virtual bool  set(const char str[]) = 0;
-
-protected:
-  /*
-   * Talker ID - a two-character prefix that identifies 
-   * the type of the transmitting unit. 
-   * 
-   * "P" for proprietaty NMEA tags
-   */
-  const char* talker;
-
-  /*
-   * NMEA sentence tag - a three character string that
-   * identifies the type of sentence.
-   */
-  const char* tag;
-
-  static bool  valid(const char str[]);
-  bool         matches(const char str[]);
-
-  /*
-   * Calculates NMEA sentence checksum and adds it to the end of the string
-   */
-  static char* addChecksum(char str[]);
-
-  /*
-   * Parses latitude/longitude string to Point
-   * 
-   * latitide,<N|S>,longitude,<E|W> 
-   */
-  static const char* parsePoint(const char str[], Point& point);
-  static char* pointToString(const Point& point, char str[]);   
-
-  /*
-   * Parses hhmmss.ss string to time elements of tmElements_t structure
-   */
-  static const char* parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds);
-  static char* timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]);       
-  
-  /*
-   * Where a numeric latitude or longitude is given, the two digits immediately to the left 
-   * of the decimal point are whole minutes, to the right are decimals of minutes, 
-   * and the remaining digits to the left of the whole minutes are whole degrees.
-   * Eg. 4533.35 is 45 degrees and 33.35 minutes. ".35" of a minute is exactly 21 seconds.
-   * Eg. 16708.033 is 167 degrees and 8.033 minutes. ".033" of a minute is about 2 seconds.
-   */
-  static char* decimalDegreesToString(float dd, char str[], size_t len);
-  static float stringToDecimalDegrees(const char str[]);
-
-};
 
 /*
  * RMC - Recommended Minimum Navigation Information
@@ -249,6 +163,30 @@ public:
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);
 };
+
+/*
+ * Parses latitude/longitude string to Point
+ *
+ * latitide,<N|S>,longitude,<E|W>
+ */
+const char* parsePoint(const char str[], Point& point);
+char* pointToString(const Point& point, char str[]);
+
+/*
+ * Parses hhmmss.ss string to time elements of tmElements_t structure
+ */
+const char* parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds);
+char* timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]);
+
+/*
+ * Where a numeric latitude or longitude is given, the two digits immediately to the left
+ * of the decimal point are whole minutes, to the right are decimals of minutes,
+ * and the remaining digits to the left of the whole minutes are whole degrees.
+ * Eg. 4533.35 is 45 degrees and 33.35 minutes. ".35" of a minute is exactly 21 seconds.
+ * Eg. 16708.033 is 167 degrees and 8.033 minutes. ".033" of a minute is about 2 seconds.
+ */
+char* decimalDegreesToString(float dd, char str[], size_t len);
+float stringToDecimalDegrees(const char str[]);
 
 #endif /* _SENTENCES_H_ */
 

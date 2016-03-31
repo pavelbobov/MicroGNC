@@ -21,9 +21,11 @@
 #ifndef _MICROGNC_H_
 #define _MICROGNC_H_
 
+#include "Instruments/Instrument.h"
 #include "Instruments/MessageBus.h"
 #include "Instruments/StreamTalker.h"
 #include "Instruments/CourseComputer.h"
-#include "Sentences/Sentences.h"
+#include "Sentences/Sentence.h"
+#include "Sentences/Nmea.h"
 
 #endif
