@@ -20,15 +20,11 @@
  * limitations under the License.
  */
 
+#include "Sentence.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-
-#include "StrUtils.h"
-#include "Sentences.h"
-
-const float DEGREES_IN_MINUTE = 1.0/60.0;
-const float MINUTES_IN_DEGREE = 60.0;
 
 Sentence::Sentence(const char talker[], const char tag[]) : 
   talker(talker), tag(tag) {
@@ -41,75 +37,6 @@ bool Sentence::matches(const char str[]) {
   return strncmp(str + 1 + strlen(talker), tag, strlen(tag)) == 0;
 }
 
-const char* Sentence::parsePoint(const char* str, Point& point) {
-  const char* p = str;
-  
-  if (',' != *p)
-    point.latitude = stringToDecimalDegrees(p);
-  
-  p = nextToken(p);
-  
-  if (*p == *SOUTH) 
-    point.latitude = -point.latitude;
-  
-  // parse out longitude
-  p = nextToken(p);
-  
-  if (',' != *p)
-    point.longitude = stringToDecimalDegrees(p);
-  
-  p = nextToken(p);
-  
-  if (*p == *WEST) 
-    point.longitude = -point.longitude;
-
-  return nextToken(p);
-}
-
-char* Sentence::pointToString(const Point& point, char str[]) {
-  decimalDegreesToString(fabs(point.latitude), str, 9);
-
-  addComma(str);
-  
-  if (point.latitude > 0)
-    strcat(str, NORTH);
-  else
-    strcat(str, SOUTH);
-
-  addComma(str);
-
-  decimalDegreesToString(fabs(point.longitude), strchr(str, '\0'), 10);
-
-  addComma(str);
-  
-  if (point.longitude > 0)
-    strcat(str, EAST);
-  else
-    strcat(str, WEST);
-
-  return strchr(str, '\0');
-}
-
-const char* Sentence::parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds) {
-  float timef = atof(str);
-  
-  uint32_t time = timef;
-  datetime.Hour = time / 10000L;
-  datetime.Minute = (time % 10000L) / 100L;
-  datetime.Second = (time % 100L);
-
-  milliseconds = fmod(timef, 1.0) * 1000.0;
-
-  return nextToken(str);
-}
-
-char* Sentence::timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]) {
-  float timef = datetime.Hour * 10000.0  + datetime.Minute * 100.0 + datetime.Second + milliseconds * 0.001;
-  
-  zeropad(ftoa(timef, str, 3), 10);
-
-  return strchr(str, '\0');
-}
 
 bool Sentence::valid(const char nmea[]) {
   if (!nmea) 
@@ -144,14 +71,21 @@ char* Sentence::addChecksum(char str[]) {
   return str;
 }
 
-char* Sentence::decimalDegreesToString(float dd, char str[], size_t len) {
-  float f = floor(dd) * 100.0 + fmod(dd, 1.0) * MINUTES_IN_DEGREE;
-
-  return zeropad(ftoa(f, str, 4), len);
+char toHex(unsigned char c) {
+  return c < 10 ? '0' + c : 'A' + c - 10;
 }
 
-float Sentence::stringToDecimalDegrees(const char str[]) {
-  float f = atof(str);
-
-  return floor(f * 0.01) + fmod(f, 100.0) * DEGREES_IN_MINUTE;
+// read a Hex value and return the decimal equivalent
+unsigned char parseHex(char c) {
+  if (c < '0')
+    return 0;
+  if (c <= '9')
+    return c - '0';
+  if (c < 'A')
+    return 0;
+  if (c <= 'F')
+    return (c - 'A') + 10;
+  // if (c > 'F')
+  return 0;
 }
+

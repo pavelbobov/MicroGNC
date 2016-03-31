@@ -20,7 +20,7 @@
 #define _STREAMTALKER_H_
 
 #include <Stream.h>
-#include "MessageBus.h"
+#include "Instrument.h"
 
 #define MAX_STREAM_FILTERS 10
 

@@ -19,8 +19,8 @@
 #ifndef COURSECOMPUTER_H_
 #define COURSECOMPUTER_H_
 
-#include "../Sentences/Sentences.h"
-#include "MessageBus.h"
+#include "../Sentences/Nmea.h"
+#include "Instrument.h"
 
 /*
  * Computes direct course from current location to a waypoint. 

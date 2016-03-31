@@ -21,24 +21,6 @@
 
 #include "StrUtils.h"
 
-char toHex(unsigned char c) {
-  return c < 10 ? '0' + c : 'A' + c - 10;
-}
-
-// read a Hex value and return the decimal equivalent
-unsigned char parseHex(char c) {
-  if (c < '0')
-    return 0;
-  if (c <= '9')
-    return c - '0';
-  if (c < 'A')
-    return 0;
-  if (c <= 'F')
-    return (c - 'A') + 10;
-  // if (c > 'F')
-  return 0;
-}
-
 const char* nextToken(const char* p) {
   return strchr(p, ',') + 1;
 }
@@ -88,5 +70,4 @@ char* zeropad(char str[], size_t width) {
 
   return str;
 }
-
 
