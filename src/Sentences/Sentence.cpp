@@ -21,10 +21,7 @@
  */
 
 #include "Sentence.h"
-
 #include <string.h>
-#include <stdlib.h>
-#include <math.h>
 
 Sentence::Sentence(const char talker[], const char tag[]) : 
   talker(talker), tag(tag) {
@@ -37,15 +34,14 @@ bool Sentence::matches(const char str[]) {
   return strncmp(str + 1 + strlen(talker), tag, strlen(tag)) == 0;
 }
 
-
-bool Sentence::valid(const char nmea[]) {
-  if (!nmea) 
+bool Sentence::valid(const char str[]) {
+  if (!str)
     return false;
     
   unsigned char sum = 0;
   const char* p;
   
-  for (p = nmea + 1; *p != '*' && *p != '\0'; p++) 
+  for (p = str + 1; *p != '*' && *p != '\0'; p++)
     sum ^= *p;
 
   if (*p == '\0') return false;

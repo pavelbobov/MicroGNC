@@ -8,7 +8,7 @@
 
 
 BWCSentence	    KEYWORD1
-NMEASentence	KEYWORD1
+Sentence	    KEYWORD1
 RMCSentence	    KEYWORD1
 WPLSentence	    KEYWORD1
 MessageBus      KEYWORD1
