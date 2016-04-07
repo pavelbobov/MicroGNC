@@ -36,6 +36,8 @@ const char* nextToken(const char* p);
  */
 void  addComma(char *str);
 
+char* ltoa2(long l, char str[], int precision);
+
 /*
  * Converts floating point number to decimal string representation
  * 

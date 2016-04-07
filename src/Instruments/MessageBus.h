@@ -33,7 +33,7 @@
 class MessageBus {
 protected:
   Instrument* instruments[MAX_INSTRUMENTS];
-  size_t      numInstruments = 0;
+  size_t      numInstruments;
        
 public:
   /*
