@@ -1,13 +1,8 @@
-[![Build Status](https://travis-ci.org/pavelbobov/MicroGNC.svg?branch=master)](https://travis-ci.org/pavelbobov/MicroGNC)
+# MicroGNC [![Build Status](https://travis-ci.org/pavelbobov/MicroGNC.svg?branch=master)](https://travis-ci.org/pavelbobov/MicroGNC)
 
-# MicroGNC
 Guidance, Navigation and Control Library for Arduino
 
 Autopilot components for model boats, cars, planes, rockets, and everything else that moves, can be steered, and has a mission. This library is intended to be light, easy to use, and extensible. It brings big industry standards and software development practices to small-scale projects.     
-
-* *Guidance* refers to the determination of the path of travel from the vehicle's current location to a designated the target.
-* *Navigation* refers to the determination of the vehicle's location and velocity as well as its attitude (orientation).
-* *Control* refers to steering controls needed to track guidance commands while maintaining vehicle stability.
 
 Dependencies
 * [Time library](https://github.com/PaulStoffregen/Time)
