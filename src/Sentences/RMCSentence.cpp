@@ -28,7 +28,10 @@ const float DEGREES_IN_MINUTE = 1.0/60.0;
 const float MINUTES_IN_DEGREE = 60.0;
 
 
-RMCSentence::RMCSentence() : Sentence("GP", NMEA_RMC) {
+RMCSentence::RMCSentence() :
+  Sentence("GP", NMEA_RMC),
+  milliseconds(0), fix(false),
+  speed(0), course(0), variation(0) {
 }
 
 RMCSentence::~RMCSentence() {
@@ -66,7 +69,7 @@ char* RMCSentence::get(char str[], size_t buflen) const {
   addComma(str);
     
   long fulldate = datetime.Day * 10000L + datetime.Month * 100L + (datetime.Year - 30);
-  zeropad(ltoa(fulldate, strchr(str, '\0'), 10), 6);
+  zeropad(ltoa2(fulldate, strchr(str, '\0'), 10), 6);
 
   addComma(str);
 
@@ -141,9 +144,9 @@ bool RMCSentence::set(const char nmea[]) {
   return true;
 }
 
-time_t RMCSentence::makeTime() {
-  return ::makeTime(datetime);
-}
+//time_t RMCSentence::makeTime() {
+//  return ::makeTime(datetime);
+//}
 
 const char* parsePoint(const char* str, Point& point) {
   const char* p = str;

@@ -76,12 +76,12 @@
 class RMCSentence : public Sentence {   
 public:
   tmElements_t  datetime;
-  uint16_t      milliseconds  = 0;
-  bool          fix = false;
+  uint16_t      milliseconds;
+  bool          fix;
   Point         position;
-  float         speed = 0;
-  float         course = 0;
-  float         variation = 0;
+  float         speed;
+  float         course;
+  float         variation;
   
   RMCSentence();
   ~RMCSentence();
@@ -89,7 +89,7 @@ public:
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);
 
-  time_t makeTime();
+  //time_t makeTime();
 };
 
 /*
@@ -150,11 +150,11 @@ public:
 class BWCSentence : public Sentence {   
 public:
   tmElements_t  datetime;
-  uint16_t      milliseconds  = 0;
+  uint16_t      milliseconds;
   Point         waypoint;
-  float         bearingTrue = -1;
-  float         bearingMagnetic = -1;
-  float         distance = -1;
+  float         bearingTrue;
+  float         bearingMagnetic;
+  float         distance;
   char          waypointId[NMEA_MAX_WAYPOINT_NAME_LENGTH + 1];  
   
   BWCSentence();
