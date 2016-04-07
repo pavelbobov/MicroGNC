@@ -19,7 +19,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <Time.h>
+#include <time.h>
 
 #include "Nmea.h"
 #include "StrUtils.h"
@@ -68,7 +68,7 @@ char* RMCSentence::get(char str[], size_t buflen) const {
 
   addComma(str);
     
-  long fulldate = datetime.Day * 10000L + datetime.Month * 100L + (datetime.Year - 30);
+  long fulldate = datetime.tm_mday * 10000L + datetime.tm_mon * 100L + (datetime.tm_year - 30);
   zeropad(ltoa2(fulldate, strchr(str, '\0'), 10), 6);
 
   addComma(str);
@@ -125,10 +125,10 @@ bool RMCSentence::set(const char nmea[]) {
   p = nextToken(p);
   
   if (',' != *p) {
-    uint32_t fulldate = atol(p);
-    datetime.Day = fulldate / 10000L;
-    datetime.Month = (fulldate % 10000L) / 100L;
-    datetime.Year = 30 + (fulldate % 100L);
+    unsigned long fulldate = atol(p);
+    datetime.tm_mday = fulldate / 10000L;
+    datetime.tm_mon = (fulldate % 10000L) / 100L;
+    datetime.tm_year = 30 + (fulldate % 100L);
   }
 
   p = nextToken(p);
@@ -197,21 +197,21 @@ char* pointToString(const Point& point, char str[]) {
   return strchr(str, '\0');
 }
 
-const char* parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds) {
+const char* parseTime(const char str[], tm& datetime, int& milliseconds) {
   float timef = atof(str);
 
-  uint32_t time = timef;
-  datetime.Hour = time / 10000L;
-  datetime.Minute = (time % 10000L) / 100L;
-  datetime.Second = (time % 100L);
+  unsigned long time = timef;
+  datetime.tm_hour = time / 10000L;
+  datetime.tm_min = (time % 10000L) / 100L;
+  datetime.tm_sec = (time % 100L);
 
   milliseconds = fmod(timef, 1.0) * 1000.0;
 
   return nextToken(str);
 }
 
-char* timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]) {
-  float timef = datetime.Hour * 10000.0  + datetime.Minute * 100.0 + datetime.Second + milliseconds * 0.001;
+char* timeToString(const tm& datetime, int milliseconds, char str[]) {
+  float timef = datetime.tm_hour * 10000.0  + datetime.tm_min * 100.0 + datetime.tm_sec + milliseconds * 0.001;
 
   zeropad(ftoa(timef, str, 3), 10);
 

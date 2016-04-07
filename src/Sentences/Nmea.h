@@ -25,7 +25,7 @@
 #define _SENTENCES_H_
 
 #include <stdlib.h>
-#include "Time.h"
+#include <time.h>
 
 #include "Geo.h"
 #include "Sentence.h"
@@ -43,7 +43,7 @@
 #define WEST  "W"
 
 #define NMEA_MAX_LENGTH  83
-#define NMEA_MAX_WAYPOINT_NAME_LENGTH 6
+#define NMEA_MAX_WAYPOINT_NAME_LENGTH 10
 
 /*
  * RMC - Recommended Minimum Navigation Information
@@ -75,13 +75,13 @@
  */
 class RMCSentence : public Sentence {   
 public:
-  tmElements_t  datetime;
-  uint16_t      milliseconds;
-  bool          fix;
-  Point         position;
-  float         speed;
-  float         course;
-  float         variation;
+  tm       datetime;
+  int      milliseconds;
+  bool     fix;
+  Point    position;
+  float    speed;
+  float    course;
+  float    variation;
   
   RMCSentence();
   ~RMCSentence();
@@ -149,13 +149,13 @@ public:
  */
 class BWCSentence : public Sentence {   
 public:
-  tmElements_t  datetime;
-  uint16_t      milliseconds;
-  Point         waypoint;
-  float         bearingTrue;
-  float         bearingMagnetic;
-  float         distance;
-  char          waypointId[NMEA_MAX_WAYPOINT_NAME_LENGTH + 1];  
+  tm       datetime;
+  int      milliseconds;
+  Point    waypoint;
+  float    bearingTrue;
+  float    bearingMagnetic;
+  float    distance;
+  char     waypointId[NMEA_MAX_WAYPOINT_NAME_LENGTH + 1];
   
   BWCSentence();
   ~BWCSentence();
@@ -175,8 +175,8 @@ char* pointToString(const Point& point, char str[]);
 /*
  * Parses hhmmss.ss string to time elements of tmElements_t structure
  */
-const char* parseTime(const char str[], tmElements_t& datetime, uint16_t& milliseconds);
-char* timeToString(const tmElements_t& datetime, uint16_t milliseconds, char str[]);
+const char* parseTime(const char str[], tm& datetime, int& milliseconds);
+char* timeToString(const tm& datetime, int milliseconds, char str[]);
 
 /*
  * Where a numeric latitude or longitude is given, the two digits immediately to the left

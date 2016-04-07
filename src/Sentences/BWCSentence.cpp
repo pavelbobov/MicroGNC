@@ -19,7 +19,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <Time.h>
+#include <time.h>
 
 #include "Nmea.h"
 #include "StrUtils.h"
