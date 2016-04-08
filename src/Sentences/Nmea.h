@@ -25,11 +25,9 @@
 #define _SENTENCES_H_
 
 #include <stdlib.h>
-#include <time.h>
-
+#include "Chrono.h"
 #include "Geo.h"
 #include "Sentence.h"
-
 
 //Sentence tags
 #define NMEA_RMC "RMC"
@@ -171,12 +169,6 @@ public:
  */
 const char* parsePoint(const char str[], Point& point);
 char* pointToString(const Point& point, char str[]);
-
-/*
- * Parses hhmmss.ss string to time elements of tmElements_t structure
- */
-const char* parseTime(const char str[], tm& datetime, int& milliseconds);
-char* timeToString(const tm& datetime, int milliseconds, char str[]);
 
 /*
  * Where a numeric latitude or longitude is given, the two digits immediately to the left

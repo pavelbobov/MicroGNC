@@ -5,4 +5,4 @@ build:
 	    ../src/Instruments/CourseComputer.cpp \
 	    ../src/Instruments/MessageBus.cpp \
 	    tests.cpp \
-	    -o tests -I /usr/local/share/arduino/libraries/Time -lm -g 
+	    -o tests-lm -g 

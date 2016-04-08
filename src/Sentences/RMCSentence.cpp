@@ -19,8 +19,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
-
 #include "Nmea.h"
 #include "StrUtils.h"
 
@@ -68,8 +66,7 @@ char* RMCSentence::get(char str[], size_t buflen) const {
 
   addComma(str);
     
-  long fulldate = datetime.tm_mday * 10000L + datetime.tm_mon * 100L + (datetime.tm_year - 30);
-  zeropad(ltoa2(fulldate, strchr(str, '\0'), 10), 6);
+  dateToString(datetime, strchr(str, '\0'));
 
   addComma(str);
 
@@ -124,14 +121,7 @@ bool RMCSentence::set(const char nmea[]) {
   
   p = nextToken(p);
   
-  if (',' != *p) {
-    unsigned long fulldate = atol(p);
-    datetime.tm_mday = fulldate / 10000L;
-    datetime.tm_mon = (fulldate % 10000L) / 100L;
-    datetime.tm_year = 30 + (fulldate % 100L);
-  }
-
-  p = nextToken(p);
+  p = parseDate(p, datetime);
 
   if (',' != *p)
     variation = atof(p);
@@ -143,10 +133,6 @@ bool RMCSentence::set(const char nmea[]) {
   
   return true;
 }
-
-//time_t RMCSentence::makeTime() {
-//  return ::makeTime(datetime);
-//}
 
 const char* parsePoint(const char* str, Point& point) {
   const char* p = str;
@@ -197,27 +183,6 @@ char* pointToString(const Point& point, char str[]) {
   return strchr(str, '\0');
 }
 
-const char* parseTime(const char str[], tm& datetime, int& milliseconds) {
-  float timef = atof(str);
-
-  unsigned long time = timef;
-  datetime.tm_hour = time / 10000L;
-  datetime.tm_min = (time % 10000L) / 100L;
-  datetime.tm_sec = (time % 100L);
-
-  milliseconds = fmod(timef, 1.0) * 1000.0;
-
-  return nextToken(str);
-}
-
-char* timeToString(const tm& datetime, int milliseconds, char str[]) {
-  float timef = datetime.tm_hour * 10000.0  + datetime.tm_min * 100.0 + datetime.tm_sec + milliseconds * 0.001;
-
-  zeropad(ftoa(timef, str, 3), 10);
-
-  return strchr(str, '\0');
-}
-
 char* decimalDegreesToString(float dd, char str[], size_t len) {
   float f = floor(dd) * 100.0 + fmod(dd, 1.0) * MINUTES_IN_DEGREE;
 
@@ -229,4 +194,5 @@ float stringToDecimalDegrees(const char str[]) {
 
   return floor(f * 0.01) + fmod(f, 100.0) * DEGREES_IN_MINUTE;
 }
+
 
