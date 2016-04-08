@@ -7,9 +7,6 @@ before_install:
   - tar xf arduino-1.6.7-linux64.tar.xz
   - sudo mv arduino-1.6.7 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
-  - wget https://github.com/PaulStoffregen/Time/archive/v1.5.tar.gz
-  - tar xf v1.5.tar.gz
-  - sudo mv Time-1.5 /usr/local/share/arduino/libraries/Time
 install:
   - ln -s $PWD /usr/local/share/arduino/libraries/MicroGNC
 script:

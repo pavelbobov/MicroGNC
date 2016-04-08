@@ -42,9 +42,9 @@ bool CourseComputer::putMessage(const char message[]) {
 
 void CourseComputer::CourseComputer::updateBWC() {
   if (rmc.fix) {
-    bwc.datetime.Hour = rmc.datetime.Hour;
-    bwc.datetime.Minute = rmc.datetime.Minute;
-    bwc.datetime.Second = rmc.datetime.Second;
+    bwc.datetime.tm_hour = rmc.datetime.tm_hour;
+    bwc.datetime.tm_min = rmc.datetime.tm_min;
+    bwc.datetime.tm_sec = rmc.datetime.tm_sec;
     bwc.milliseconds = rmc.milliseconds;
     
     bwc.waypoint.set(wpl.waypoint);
