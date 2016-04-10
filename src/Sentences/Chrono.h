@@ -5,10 +5,14 @@
  *      Author: pavel
  */
 
-#ifndef CHRONO_H_
-#define CHRONO_H_
+#ifndef _CHRONO_H_
+#define _CHRONO_H_
 
 #ifdef ARDUINO
+/*
+ * Arduino AVR library does not include standard C time.h
+ * Declare tm struct similar to the one from time.h
+ */
 
 struct tm
 {
@@ -38,4 +42,4 @@ char* timeToString(const tm& datetime, int milliseconds, char str[]);
 const char* parseDate(const char str[], tm& datetime);
 char* dateToString(const tm& datetime, char str[]);
 
-#endif /* CHRONO_H_ */
+#endif /* _CHRONO_H_ */

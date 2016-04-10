@@ -20,8 +20,8 @@
  * limitations under the License.
  */
 
-#include "Sentence.h"
 #include <string.h>
+#include "Sentence.h"
 
 Sentence::Sentence(const char talker[], const char tag[]) : 
   talker(talker), tag(tag) {
@@ -51,18 +51,26 @@ bool Sentence::valid(const char str[]) {
   return !sum;
 }
 
+char* Sentence::addHead(char str[]) const {
+  str[0] = '$';
+  str[1] = '\0';
+  strcat(str, talker);
+  strcat(str, tag);
+  return str;
+}
+
 char* Sentence::addChecksum(char str[]) {
   unsigned char parity = 0;
 
-  char* p = str + 1;
+  char* p = str;
   
-  for(;*p != 0; p++)
+  for(p++; *p != 0; p++)
     parity ^= *p; 
 
   p[0] = '*';
   p[1] = toHex(parity / 16);
   p[2] = toHex(parity % 16);
-  p[3] = 0;
+  p[3] = '\0';
   
   return str;
 }

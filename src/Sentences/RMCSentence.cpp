@@ -39,10 +39,7 @@ char* RMCSentence::get(char str[], size_t buflen) const {
   if (str == NULL || buflen < NMEA_MAX_LENGTH)
     return NULL;
     
-  str[0] = '$';
-  str[1] = '\0';
-  strcat(str, talker);
-  strcat(str, tag);
+  addHead(str);
 
   addComma(str);
 
