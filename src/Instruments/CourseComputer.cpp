@@ -42,6 +42,7 @@ bool CourseComputer::putMessage(const char message[]) {
 
 void CourseComputer::CourseComputer::updateBWC() {
   if (rmc.fix) {
+
     bwc.datetime.tm_hour = rmc.datetime.tm_hour;
     bwc.datetime.tm_min = rmc.datetime.tm_min;
     bwc.datetime.tm_sec = rmc.datetime.tm_sec;
@@ -51,12 +52,16 @@ void CourseComputer::CourseComputer::updateBWC() {
     
     strcpy(bwc.waypointId, wpl.name);
     
-    bwc.bearingTrue = rmc.position.bearing(wpl.waypoint);
+    Arc course;
+    course.start.set(rmc.position);
+    course.end.set(wpl.waypoint);
+
+    bwc.bearingTrue = course.bearing();
     
     if (rmc.variation >= 0)
       bwc.bearingMagnetic = fmod(bwc.bearingTrue + rmc.variation + 360.0, 360.0);
     
-    bwc.distance = rmc.position.distance(wpl.waypoint) * METERS_TO_NAUTICAL_MILES;
+    bwc.distance = course.length() * METERS_TO_NAUTICAL_MILES;
   }
 }
 

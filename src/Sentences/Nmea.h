@@ -86,8 +86,6 @@ public:
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);
-
-  //time_t makeTime();
 };
 
 /*

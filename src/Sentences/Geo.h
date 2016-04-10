@@ -33,16 +33,28 @@ public:
   float longitude;
 
   Point();
-  Point(float lat, float lon);
 
   void set(float lat, float lon);
   void set(const Point& point);
-  
-  //Computes great-circle bearing from this to the specified point
-  float bearing(const Point& point) const;
-  
-  //Computes great-circle distance from this to the specified point in meters (accuracy %0.5)
-  float distance(const Point& point) const;
+};
+
+/*
+ * Great-circle arc from start to end point
+ */
+class Arc {
+public:
+  Point start;
+  Point end;
+
+  Arc();
+
+  void set(const Point& s, const Point& e);
+
+  //Great-circle initial bearing in degrees from start to end point
+  float bearing() const;
+
+  //Great-circle length of the arc in meters from start to end point (accuracy %0.5)
+  float length() const;
 };
 
 #endif /* _GEO_H_ */

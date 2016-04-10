@@ -78,8 +78,20 @@ protected:
    */
   const char* tag;
 
+  /*
+   * Returns true if tag of the sentence matches tag of the member variable
+   */
+  bool  matches(const char str[]);
+
+  /*
+   * Adds $<talker><tag> to the end of the string
+   */
+  char* addHead(char str[]) const;
+
+  /*
+   * returns true if checksum at the end of the sentence is valid
+   */
   static bool  valid(const char str[]);
-  bool         matches(const char str[]);
 
   /*
    * Calculates sentence checksum and adds it to the end of the string
