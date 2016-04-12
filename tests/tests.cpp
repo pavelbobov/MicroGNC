@@ -25,12 +25,15 @@ CourseComputer courseComputer;
 int main( int argc, const char* argv[] )
 {
   char buffer[NMEA_MAX_LENGTH];
-  courseComputer.putMessage(GPRMC_SAMPLE);
-  courseComputer.putMessage(GPWPL_SAMPLE);
-  courseComputer.getMessage(buffer, NMEA_MAX_LENGTH);
-  printf("%s\n", buffer);
   BWCSentence bwc;
-  assert(bwc.set(buffer));
+
+  for (int i = 0; i < 1000; i++) {
+    courseComputer.putMessage(GPRMC_SAMPLE);
+    courseComputer.putMessage(GPWPL_SAMPLE);
+    courseComputer.getMessage(buffer, NMEA_MAX_LENGTH);
+    printf("%s\n", buffer);
+    assert(bwc.set(buffer));
+  }
 
   return 0;
 }

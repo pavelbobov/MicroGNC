@@ -99,21 +99,5 @@ protected:
   static char* addChecksum(char str[]);
 };
 
-/*
- * Converts numbers 0-15 to hex digit characters '0'-'F'
- *
- * @param c number 0-15
- * @return hex digit character '0'-'F'
- */
-char toHex(unsigned char c);
-
-/*
- * Converts hex digit characters '0'-'F' to numbers 0-15
- *
- * @param c hex digit character '0'-'F'
- * @return number 0-15
- */
-unsigned char parseHex(char c);
-
 #endif /* _SENTENCE_H_ */
 

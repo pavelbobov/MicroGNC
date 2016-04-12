@@ -24,8 +24,7 @@ const float radToDeg = 57.29577951308233;//180/M_PI
 
 /********************************* Point **************************************/
 
-Point::Point() {
-  set(0, 0);
+Point::Point() : latitude(0), longitude(0) {
 }
 
 void Point::set(float lat, float lon) {

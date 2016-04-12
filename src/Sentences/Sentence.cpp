@@ -23,6 +23,37 @@
 #include <string.h>
 #include "Sentence.h"
 
+/*
+ * Converts numbers 0-15 to hex digit characters '0'-'F'
+ *
+ * @param c number 0-15
+ * @return hex digit character '0'-'F'
+ */
+char toHex(unsigned char c) {
+  return c < 10 ? '0' + c : 'A' + c - 10;
+}
+
+/*
+ * Converts hex digit characters '0'-'F' to numbers 0-15
+ *
+ * @param c hex digit character '0'-'F'
+ * @return number 0-15
+ */
+unsigned char parseHex(char c) {
+  if (c < '0')
+    return 0;
+  if (c <= '9')
+    return c - '0';
+  if (c < 'A')
+    return 0;
+  if (c <= 'F')
+    return (c - 'A') + 10;
+  // if (c > 'F')
+  return 0;
+}
+
+/********************************** Sentence **********************************/
+
 Sentence::Sentence(const char talker[], const char tag[]) : 
   talker(talker), tag(tag) {
 }
@@ -74,22 +105,3 @@ char* Sentence::addChecksum(char str[]) {
   
   return str;
 }
-
-char toHex(unsigned char c) {
-  return c < 10 ? '0' + c : 'A' + c - 10;
-}
-
-// read a Hex value and return the decimal equivalent
-unsigned char parseHex(char c) {
-  if (c < '0')
-    return 0;
-  if (c <= '9')
-    return c - '0';
-  if (c < 'A')
-    return 0;
-  if (c <= 'F')
-    return (c - 'A') + 10;
-  // if (c > 'F')
-  return 0;
-}
-
