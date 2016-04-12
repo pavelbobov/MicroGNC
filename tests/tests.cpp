@@ -31,7 +31,7 @@ int main( int argc, const char* argv[] )
     courseComputer.putMessage(GPRMC_SAMPLE);
     courseComputer.putMessage(GPWPL_SAMPLE);
     courseComputer.getMessage(buffer, NMEA_MAX_LENGTH);
-    printf("%s\n", buffer);
+    //printf("%s\n", buffer);
     assert(bwc.set(buffer));
   }
 

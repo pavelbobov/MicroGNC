@@ -14,7 +14,7 @@ script:
   - cd $PWD/tests
   - make
   - ./tests
-  - gprof tests
+  - gprof -b tests
 notifications:
   email:
     on_success: change
