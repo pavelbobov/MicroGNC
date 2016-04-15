@@ -31,8 +31,7 @@
 class Instrument {
 protected:
   const char* id;
-    
-public:
+
   /*
    * Constructor
    * 
@@ -40,6 +39,7 @@ public:
    */
   Instrument(const char id[]) : id(id) {}
 
+public:
   /*
    * Destructor
    */

@@ -22,9 +22,10 @@
 #include "Nmea.h"
 #include "StrUtils.h"
 
-BWCSentence::BWCSentence() :  Sentence("GP", NMEA_BWC),
-   bearingMagnetic(-1), bearingTrue(-1), milliseconds(0), distance(-1) {
-   waypointId[0] = '\0';
+BWCSentence::BWCSentence() : Sentence("GP", NMEA_BWC),
+                             milliseconds(0), bearingTrue(-1),
+                             bearingMagnetic(-1), distance(-1) {
+  waypointId[0] = '\0';
 }
 
 BWCSentence::~BWCSentence() {
