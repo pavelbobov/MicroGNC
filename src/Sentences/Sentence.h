@@ -31,15 +31,16 @@
  * 
  */
 class Sentence {
-public:
+protected:
   /*
    * Constructor
    * 
    * @param talker talker ID
    * @param tag tag
    */
-
   Sentence(const char talker[], const char tag[]);
+
+public:
   /*
    * Destructor
    */
