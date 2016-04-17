@@ -25,7 +25,6 @@
 const float DEGREES_IN_MINUTE = 1.0/60.0;
 const float MINUTES_IN_DEGREE = 60.0;
 
-
 RMCSentence::RMCSentence() :
   Sentence("GP", NMEA_RMC),
   milliseconds(0), fix(false),
@@ -41,45 +40,47 @@ char* RMCSentence::get(char str[], size_t buflen) const {
     
   addHead(str);
 
-  addComma(str);
+  strcat(str, ",");
 
-  timeToString(datetime, milliseconds, strchr(str, '\0'));
+  char* p = strend(str);
 
-  addComma(str);
+  timeToString(datetime, milliseconds, p);
+
+  strcat(p, fix ? ",A," : ",V,");
+
+  p = strend(p);
+
+  pointToString(position, p);
+
+  strcat(p, ",");
+
+  p = strend(p);
   
-  strcat(str, fix ? "A" : "V");
+  ftoa(speed, p, 2);
 
-  addComma(str);
-
-  pointToString(position, strchr(str, '\0'));
-
-  addComma(str);
-  
-  ftoa(speed, strchr(str, '\0'), 2);
-
-  addComma(str);
+  strcat(p, ",");
     
-  ftoa(course, strchr(str, '\0'), 2);
+  p = strend(p);
 
-  addComma(str);
+  ftoa(course, p, 2);
+
+  strcat(p, ",");
     
-  dateToString(datetime, strchr(str, '\0'));
+  p = strend(p);
 
-  addComma(str);
+  dateToString(datetime, p);
 
-  ftoa(fabs(variation), strchr(str, '\0'), 1);
+  strcat(p, ",");
 
-  addComma(str);
+  p = strend(p);
+
+  ftoa(fabs(variation), p, 1);
 
   if (variation > 0)
-    strcat(str, EAST);
+    strcat(p, ",E,D");
   else
-    strcat(str, WEST);
+    strcat(p, ",W,D");
 
-  addComma(str);
-  
-  strcat(str, "D");
-  
   return addChecksum(str);
 }
 
@@ -159,18 +160,18 @@ const char* parsePoint(const char* str, Point& point) {
 char* pointToString(const Point& point, char str[]) {
   decimalDegreesToString(fabs(point.latitude), str, 9);
 
-  addComma(str);
+  strcat(str, ",");
 
   if (point.latitude > 0)
     strcat(str, NORTH);
   else
     strcat(str, SOUTH);
 
-  addComma(str);
+  strcat(str, ",");
 
   decimalDegreesToString(fabs(point.longitude), strchr(str, '\0'), 10);
 
-  addComma(str);
+  strcat(str, ",");
 
   if (point.longitude > 0)
     strcat(str, EAST);

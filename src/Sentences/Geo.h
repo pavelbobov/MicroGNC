@@ -29,8 +29,8 @@
 class Point {
 public:
   //Geographic coordinates in decimal degrees
-  float latitude; 
-  float longitude;
+  float latitude; // [-90, 90], > 0 Northern, < 0 Southern hemisphere
+  float longitude; // [-180, 180], > 0 Eastern, < 0 Western hemisphere
 
   Point();
   Point(float lat, float lon);

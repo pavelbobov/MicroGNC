@@ -30,11 +30,9 @@
 const char* nextToken(const char* p);
 
 /*
- * Adds ',' to the end of the specified string
- * 
- * @param str string
+ * Returns pointer to null terminator of the string.
  */
-void  addComma(char *str);
+char* strend(char* str);
 
 char* ltoa2(long l, char str[], int precision);
 
