@@ -1,5 +1,4 @@
 #include <string.h>
-
 #include "Nmea.h"
 #include "StrUtils.h"
   
@@ -16,13 +15,15 @@ char* WPLSentence::get(char str[], size_t buflen) const {
     
   addHead(str);
 
-  addComma(str);
+  strcat(str, ",");
 
-  pointToString(waypoint, strchr(str, '\0'));
+  char* p = strend(str);
 
-  addComma(str);
+  pointToString(waypoint, p);
 
-  strcat(str, name);
+  strcat(p, ",");
+
+  strcat(p, name);
   
   return addChecksum(str);
 }

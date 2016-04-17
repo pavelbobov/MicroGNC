@@ -25,8 +25,8 @@ const char* nextToken(const char* p) {
   return strchr(p, ',') + 1;
 }
 
-void addComma(char *str) {
-  strcat(str, ",");
+char* strend(char* str) {
+  return strchr(str, '\0');
 }
 
 /**

@@ -37,44 +37,42 @@ char* BWCSentence::get(char str[], size_t buflen) const {
     
   addHead(str);
 
-  addComma(str);
+  strcat(str, ",");
 
-  timeToString(datetime, milliseconds, strchr(str, '\0'));
+  char* p = strend(str);
 
-  addComma(str);
+  timeToString(datetime, milliseconds, p);
+
+  strcat(p, ",");
+
+  p = strend(p);
   
-  pointToString(waypoint, strchr(str, '\0'));
+  pointToString(waypoint, p);
 
-  addComma(str);
+  strcat(p, ",");
 
-  if (bearingTrue >= 0)
-    ftoa(bearingTrue, strchr(str, '\0'), 2);
+  if (bearingTrue >= 0) {
+    p = strend(p);
+    ftoa(bearingTrue, p, 2);
+  }
 
-  addComma(str);
-    
-  strcat(str, "T");
+  strcat(p, ",T,");
 
-  addComma(str);
+  if (bearingMagnetic >= 0) {
+    p = strend(p);
+    ftoa(bearingMagnetic, p, 2);
+  }
 
-  if (bearingMagnetic >= 0)
-    ftoa(bearingMagnetic, strchr(str, '\0'), 2);
+  strcat(p, ",M,");
 
-  addComma(str);
-    
-  strcat(str, "M");
-
-  addComma(str);
-
-  if (distance >= 0)
-    ftoa(distance, strchr(str, '\0'), 2);
+  if (distance >= 0) {
+    p = strend(p);
+    ftoa(distance, p, 2);
+  }
   
-  addComma(str);
+  strcat(p, ",N,");
 
-  strcat(str, "N");
-
-  addComma(str);
-
-  strcat(str, waypointId);
+  strcat(p, waypointId);
   
   return addChecksum(str);
 }

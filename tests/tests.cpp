@@ -27,17 +27,34 @@ int main( int argc, const char* argv[] )
 {
   char buffer[NMEA_MAX_LENGTH];
 
-  assert(strcmp(ftoa(12345.67890, buffer, 2), "12345.67") == 0);
-  assert(strcmp(ftoa(-12345.67890, buffer, 3), "-12345.678") == 0);
-  assert(strcmp(ftoa(0, buffer, 4), "0.0000") == 0);
+  { // ftoa
+    assert(strcmp(ftoa(12345.67890, buffer, 2), "12345.67") == 0);
+    assert(strcmp(ftoa(-12345.67890, buffer, 3), "-12345.678") == 0);
+    assert(strcmp(ftoa(0, buffer, 4), "0.0000") == 0);
+  }
 
-  Point start(53.3206, -1.7297);
-  Point end(53.1887,  0.1334);
-  Arc arc(start, end);
-  Point point(53.2611, -0.7972);
-  float xte = arc.distance(point);
-  assert(strcmp(ftoa(xte, buffer, 3), "-307.676") == 0);
-  printf("XTE=%s\n", ftoa(xte, buffer, 3));
+  { // XTE distance
+    Point start(53.3206, -1.7297);
+    Point end(53.1887,  0.1334);
+    Arc arc(start, end);
+    Point point(53.2611, -0.7972);
+    float xte = arc.distance(point);
+    assert(strcmp(ftoa(xte, buffer, 3), "-307.676") == 0);
+  }
+
+  { // length
+    Point p1(90, 0);
+    Point p2(-90, 0);
+    Arc arc(p1, p2);
+    assert(strcmp(ftoa(arc.length(), buffer, 1), "20015116.0") == 0);
+  }
+
+  { // bearing
+    Point p1(52.205, 0.119);
+    Point p2(48.857, 2.351);
+    Arc arc(p1, p2);
+    assert(strcmp(ftoa(arc.bearing(), buffer, 1), "156.1") == 0);
+  }
 
   CourseComputer courseComputer;
   BWCSentence bwc;
