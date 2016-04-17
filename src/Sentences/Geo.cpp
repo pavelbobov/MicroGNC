@@ -22,9 +22,33 @@ const float earthR = 6371009;
 const float degToRad = 0.01745329251994;//M_PI / 180;
 const float radToDeg = 57.29577951308233;//180/M_PI
 
+float sqr(float v) {
+  return v * v;
+}
+
+float haversine(float f) {
+  //haversine(φ) = sin²(φ/2) = (1 - cos(φ)) / 2
+  return sqr(sin(f * 0.5));
+}
+
+float angle(const Point& s, const Point& e) {
+  //Haversine formula from http://www.movable-type.co.uk/scripts/latlong.html
+  //a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+  //c = 2 ⋅ atan2( √a, √(1−a) )
+  float f1 = s.latitude * degToRad;
+  float f2 = e.latitude * degToRad;
+  float dl = (e.longitude - s.longitude) * degToRad;
+  float df = f2 - f1;
+  float a = haversine(df) + cos(f1) * cos(f2) * haversine(dl);
+  return 2 * atan2(sqrt(a), sqrt(1.0 - a));
+}
+
 /********************************* Point **************************************/
 
 Point::Point() : latitude(0), longitude(0) {
+}
+
+Point::Point(float lat, float lon) : latitude(lat), longitude(lon) {
 }
 
 void Point::set(float lat, float lon) {
@@ -38,16 +62,10 @@ void Point::set(const Point& point) {
 
 /********************************** Arc ***************************************/
 
-float sqr(float v) {
-  return v * v;
-}
-
-float haversine(float f) {
-  //haversine(φ) = sin²(φ/2) = (1 - cos(φ)) / 2
-  return sqr(sin(f * 0.5));
-}
-
 Arc::Arc() {
+}
+
+Arc::Arc(const Point& s, const Point& e) : start(s), end(e) {
 }
 
 void Arc::set(const Point& s, const Point& e) {
@@ -74,17 +92,23 @@ float Arc::bearing() const {
   return (rad > 0 ? rad : (2 * M_PI + rad)) * radToDeg;
 }
 
-  //Great-circle distance in meters from start to end point (accuracy %0.5)
+//Great-circle distance in meters from start to end point (accuracy %0.5)
 float Arc::length() const {
-  //Haversine formula from http://www.movable-type.co.uk/scripts/latlong.html
-  //a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
-  //c = 2 ⋅ atan2( √a, √(1−a) )
-  //d = R ⋅ c
-  float f1 = start.latitude * degToRad;
-  float f2 = end.latitude * degToRad;
-  float dl = (end.longitude - start.longitude) * degToRad;
-  float df = f2 - f1;
-  float a = haversine(df) + cos(f1) * cos(f2) * haversine(dl);
-  float c = 2 * atan2(sqrt(a), sqrt(1.0 - a));
-  return earthR * c;
+  return angle(start, end) * earthR;
 }
+
+//Great-circle distance from the given point to the arc, a.k.a. cross-track error (XTE)
+float Arc::distance(const Point& p) const {
+  /*
+  Formula from http://www.movable-type.co.uk/scripts/latlong.html
+  xte = asin( sin(δ13) ⋅ sin(θ13−θ12) ) ⋅ R
+  where δ13 is (angular) distance from start point to third point
+  θ13 is (initial) bearing from start point to third point
+  θ12 is (initial) bearing from start point to end point
+  R is the earth’s radius
+  */
+  Arc arc;
+  arc.set(start, p);
+  return asin(sin(angle(start, p)) * sin((arc.bearing() - bearing()) * degToRad)) * earthR;
+}
+

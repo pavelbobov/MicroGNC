@@ -36,7 +36,6 @@ class CourseComputer : public Instrument {
 	RMCSentence rmc;
 	WPLSentence wpl;
 	BWCSentence bwc;
-  Arc         course;
   
 public:
   /*

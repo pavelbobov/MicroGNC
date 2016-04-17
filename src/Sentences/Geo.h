@@ -33,6 +33,7 @@ public:
   float longitude;
 
   Point();
+  Point(float lat, float lon);
 
   void set(float lat, float lon);
   void set(const Point& point);
@@ -47,6 +48,7 @@ public:
   Point end;
 
   Arc();
+  Arc(const Point& s, const Point& e);
 
   void set(const Point& s, const Point& e);
 
@@ -55,6 +57,10 @@ public:
 
   //Great-circle length of the arc in meters from start to end point (accuracy %0.5)
   float length() const;
+
+  //Signed great-circle distance fin meters rom the given point to the arc,
+  //a.k.a. cross-track error (XTE)
+  float distance(const Point& p) const;
 };
 
 #endif /* _GEO_H_ */
