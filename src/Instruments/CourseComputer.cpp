@@ -51,8 +51,7 @@ void CourseComputer::CourseComputer::updateBWC() {
     
     strcpy(bwc.waypointId, wpl.name);
     
-    course.start.set(rmc.position);
-    course.end.set(wpl.waypoint);
+    Arc course(rmc.position, wpl.waypoint);
 
     bwc.bearingTrue = course.bearing();
     

@@ -70,7 +70,7 @@ float scl10(float f, int scale) {
 
 char* ftoa(float f, char str[], int precision) {
   double w;
-  double r = modf(f, &w);
+  double r = fabs(modf(f, &w));
 
   ltoa2((long)w, str, 10);
   strcat(str, ".");
