@@ -60,9 +60,9 @@ int main( int argc, const char* argv[] )
   BWCSentence bwc;
 
   for (int i = 0; i < 1000; i++) {
-    courseComputer.putMessage(GPRMC_SAMPLE);
-    courseComputer.putMessage(GPWPL_SAMPLE);
-    courseComputer.getMessage(buffer, NMEA_MAX_LENGTH);
+    courseComputer.putSentence(GPRMC_SAMPLE);
+    courseComputer.putSentence(GPWPL_SAMPLE);
+    courseComputer.getSentence(buffer, NMEA_MAX_LENGTH);
     //printf("%s\n", buffer);
     assert(bwc.set(buffer));
   }

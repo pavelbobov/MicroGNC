@@ -1,7 +1,7 @@
 /*
- * MessageBus.h
+ * Bus.h
  * 
- * Message bus and base class for instruments.
+ * Message bus.
  * 
  * (C) Copyright 2016 Pavel Bobov.
  *
@@ -18,19 +18,19 @@
  * limitations under the License.
  */
  
-#ifndef _MESSAGEBUS_H_
-#define _MESSAGEBUS_H_
+#ifndef _BUS_H_
+#define _BUS_H_
 
 #define MAX_INSTRUMENTS     10
-#define MAX_MESSAGE_LENGTH  83
+#define MAX_SENTENCE_LENGTH  83
 
 #include <stdlib.h>
 #include "Instrument.h"
 
 /*
- * A bus used to exchange messages among instruments
+ * A bus used to exchange sentence among instruments
  */
-class MessageBus {
+class Bus {
 protected:
   Instrument* instruments[MAX_INSTRUMENTS];
   size_t      numInstruments;
@@ -39,7 +39,7 @@ public:
   /*
    * Constructor
    */
-  MessageBus();
+  Bus();
 
   /*
    * Returns an array of instruments
@@ -65,28 +65,25 @@ public:
    * Adds instrument to the end of the list of instruments. 
    * The order is important.
    * 
-   * The message bus self pointer is passed to the instrument 
-   * by calling setMessageBus(this) method.
-   * 
    * @param instrument instrument
    * @return true if instrument was successfully subscribed to the bus
    */
   bool subscribe(Instrument* instrument);
   
   /*
-   * Broadcasts message to all instruments in the bus except for sender.
+   * Broadcasts sentence to all instruments in the bus except for sender.
    * 
-   * @param message message
-   * @param senderId ID of the instrument that sent the message
+   * @param sentence sentence
+   * @param senderId ID of the instrument that sent the sentence
    */
-  void broadcast(const char message[], const char senderId[]);
+  void broadcast(const char sentence[], const char senderId[]);
 
   /*
-   * Exchanges messages among instruments. 
-   * For each instrument, gets message from the instrument and
-   * broadcasts the message to all the other instruments.
+   * Exchanges sentences among instruments.
+   * For each instrument, gets sentence from the instrument and
+   * broadcasts the sentence to all the other instruments.
    */ 
   void exchange();    
 };
 
-#endif /* _MESSAGEBUS_H_ */
+#endif /* _BUS_H_ */

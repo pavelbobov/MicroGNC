@@ -27,12 +27,12 @@ CourseComputer::CourseComputer() : Instrument("IN") {
 CourseComputer::~CourseComputer() {
 }
 
-char* CourseComputer::getMessage(char message[], size_t buflen) {
-  return bwc.get(message, buflen);
+char* CourseComputer::getSentence(char sentence[], size_t buflen) {
+  return bwc.get(sentence, buflen);
 }
 
-bool CourseComputer::putMessage(const char message[]) {
-  if (rmc.set(message) || wpl.set(message)) {
+bool CourseComputer::putSentence(const char sentence[]) {
+  if (rmc.set(sentence) || wpl.set(sentence)) {
     updateBWC();
     return true;
   }

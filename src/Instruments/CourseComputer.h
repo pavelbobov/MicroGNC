@@ -51,18 +51,18 @@ public:
   /*
    * Gets BWC sentence with direct course from current location to a waypoint.
    * 
-   * @param message message buffer 
+   * @param sentence buffer
    * @param buflen buffer size
    * @return BWC sentence if the operation was successful and NULL otherwise
    */
-  char* getMessage(char message[], size_t buflen);
+  char* getSentence(char sentence[], size_t buflen);
 
   /*
    * Accepts sentences:
    * RMC - Recommended Minimum Navigation Information
    * WPL - Waypoint Location
    */
-  bool  putMessage(const char message[]);
+  bool  putSentence(const char sentence[]);
 
 private:
   void  updateBWC();

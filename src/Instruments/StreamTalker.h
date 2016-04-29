@@ -25,7 +25,7 @@
 #define MAX_STREAM_FILTERS 10
 
 /*
- * Sends/receives messages to/from the specified stream.
+ * Writes/reads sentences to/from the specified stream.
  */
 class StreamTalker : public Instrument {
 protected:
@@ -44,32 +44,32 @@ public:
 
   /*
    * Adds filter to the list of filters.
-   * If filters are added, messages that do not start with any of the filters 
-   * are ignored by putMessage() method.
+   * If filters are added, sentences that do not start with any of the filters
+   * are ignored by putSentence() method.
    * 
    * @param filter filter string
    */
   void addFilter(const char filter[]);
 
   /*
-   * Reads message from the stream.
+   * Reads sentence from the stream.
    * 
-   * @param message message buffer
+   * @param sentence buffer
    * @param buflen buffer size
    * @return message
    */
-  char* getMessage(char message[], size_t buflen);
+  char* getSentence(char sentence[], size_t buflen);
 
   /*
-   * Writes message to the stream.
+   * Writes sentence to the stream.
    * 
-   * @param message message to write
-   * @return true if the message was successfully written
+   * @param sentence sentence to write
+   * @return true if the sentence was successfully written
    */
-  bool  putMessage(const char message[]);
+  bool  putSentence(const char sentence[]);
 
 private:
-  bool  filter(const char message[]) const; 
+  bool  filter(const char sentence[]) const;
 };
 
 #endif /* _STREAMTALKER_H_ */
