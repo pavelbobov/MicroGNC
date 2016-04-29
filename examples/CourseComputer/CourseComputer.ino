@@ -52,7 +52,7 @@ StreamTalker gps("GP", &gpsSerial);
 StreamTalker serial("UP", &Serial);
 CourseComputer courseComputer;
 
-MessageBus bus;
+Bus bus;
 
 char buffer[NMEA_MAX_LENGTH];
 
@@ -70,12 +70,12 @@ void setup()
   gpsSerial.setTimeout(100);
   gpsSerial.begin(9600);
 
-  gps.putMessage(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-  gps.putMessage(PMTK_SET_NMEA_UPDATE_5HZ);
+  gps.putSentence(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+  gps.putSentence(PMTK_SET_NMEA_UPDATE_5HZ);
   
   gps.addFilter("$PMTK");
 
-  courseComputer.putMessage(GPWPL_SAMPLE);
+  courseComputer.putSentence(GPWPL_SAMPLE);
 
   bus.subscribe(&gps);
   bus.subscribe(&courseComputer);

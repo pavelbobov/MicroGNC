@@ -30,46 +30,46 @@ void StreamTalker::addFilter(const char filter[]) {
   filters[numFilters++] = filter;
 }
 
-char* StreamTalker::getMessage(char message[], size_t buflen) {
+char* StreamTalker::getSentence(char sentence[], size_t buflen) {
   if (!stream->available())
     return NULL;
 
-  message[0] = '\0';
+  sentence[0] = '\0';
   
   for (size_t i = 0; i < buflen; i++) {
-    message[0] = stream->read();
+    sentence[0] = stream->read();
     
-    if (message[0] == START_CHAR || message[0] == -1) 
+    if (sentence[0] == START_CHAR || sentence[0] == -1) 
       break;
   }
 
-  if (message[0] != START_CHAR)
+  if (sentence[0] != START_CHAR)
     return NULL;
   
-  size_t len = stream->readBytesUntil(END_CHAR, message + 1, buflen - 1);
+  size_t len = stream->readBytesUntil(END_CHAR, sentence + 1, buflen - 1);
 
   if (len == 0)
     return NULL;
 
-  message[++len] = '\0';
+  sentence[++len] = '\0';
 
-  return message;
+  return sentence;
 }
 
-bool StreamTalker::putMessage(const char message[]) {
-  if (!filter(message)) 
+bool StreamTalker::putSentence(const char sentence[]) {
+  if (!filter(sentence)) 
     return false;
   
-  stream->println(message);
+  stream->println(sentence);
   
   return true;
 }
 
-bool StreamTalker::filter(const char message[]) const {
+bool StreamTalker::filter(const char sentence[]) const {
   if (numFilters == 0) return true;
   
   for (size_t i = 0; i < numFilters; i++) 
-    if (strncmp(message, filters[i], strlen(filters[i])) == 0) 
+    if (strncmp(sentence, filters[i], strlen(filters[i])) == 0) 
       return true;
 
   return false;

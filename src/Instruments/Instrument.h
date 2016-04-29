@@ -51,21 +51,21 @@ public:
   const char* getId() { return id; }
 
   /*
-   * Gets message from instrument
+   * Gets sentence from instrument
    * 
-   * @param  message message buffer
-   * @param  maxSize message buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 caracters)
-   * @return message string or NULL if no messages are available
+   * @param  sentence buffer
+   * @param  maxSize buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 caracters)
+   * @return message string or NULL if no sentences are available
    */
-  virtual char* getMessage(char[] /* message */, size_t /* maxSize */) { return NULL; }
+  virtual char* getSentence(char[] /* sentence */, size_t /* maxSize */) { return NULL; }
 
   /*
-   * Puts message to the instrument
+   * Puts senetnce to the instrument
    * 
-   * @param  message message
-   * @return true if instrument accepted the message
+   * @param sentence sentence
+   * @return true if instrument accepted the sentence
    */
-  virtual bool putMessage(const char[] /* message */) { return false; }
+  virtual bool putSentence(const char[] /* sentence */) { return false; }
 };
 
 #endif /* _INSTRUMENT_H_ */

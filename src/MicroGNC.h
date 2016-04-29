@@ -21,8 +21,8 @@
 #ifndef _MICROGNC_H_
 #define _MICROGNC_H_
 
+#include "Instruments/Bus.h"
 #include "Instruments/Instrument.h"
-#include "Instruments/MessageBus.h"
 #include "Instruments/StreamTalker.h"
 #include "Instruments/CourseComputer.h"
 #include "Sentences/Sentence.h"

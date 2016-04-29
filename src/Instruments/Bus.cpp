@@ -1,7 +1,7 @@
 /*
- * MessageBus.cpp
+ * Bus.cpp
  * 
- * Message Bus and device interface.
+ * Bus used to exchange sentence among instruments.
  * 
  * (C) Copyright 2016 Pavel Bobov.
  *
@@ -19,14 +19,15 @@
  */
 
 #include "string.h" 
-#include "MessageBus.h"
 
-/************************* NMEAMessageBus ***********************************/
+#include "Bus.h"
 
-MessageBus::MessageBus() {
+/********************************* Bus ****************************************/
+
+Bus::Bus() : numInstruments(0) {
 }
 
-Instrument* MessageBus::getInstrumentById(char* id) {
+Instrument* Bus::getInstrumentById(char* id) {
   for (unsigned char i = 0; i < getNumInstruments(); i++)
     if (strcmp(instruments[i]->getId(), id) == 0)
       return instruments[i]; 
@@ -37,7 +38,7 @@ Instrument* MessageBus::getInstrumentById(char* id) {
 /*
  * Subscribes talker to the bus.
  */
-bool MessageBus::subscribe(Instrument* instrument) {
+bool Bus::subscribe(Instrument* instrument) {
   if (instrument == NULL || numInstruments >= MAX_INSTRUMENTS)
     return false;
     
@@ -47,25 +48,25 @@ bool MessageBus::subscribe(Instrument* instrument) {
 }
 
 /*
- * Broadcasts message to all talkers in the bus except for the sender.
+ * Broadcasts sentence to all talkers in the bus except for the sender.
  */
-void MessageBus::broadcast(const char message[], const char senderId[]) {
+void Bus::broadcast(const char sentence[], const char senderId[]) {
   for (unsigned char receiver = 0; receiver < numInstruments; receiver++) 
     if (strcmp(instruments[receiver]->getId(), senderId) != 0)
-      instruments[receiver]->putMessage(message);
+      instruments[receiver]->putSentence(sentence);
 }
 
 /*
 * Exchanges messages among talkers 
 */ 
-void MessageBus::exchange() {
-  char buffer[MAX_MESSAGE_LENGTH];
+void Bus::exchange() {
+  char buffer[MAX_SENTENCE_LENGTH];
   
   for (unsigned char sender = 0; sender < numInstruments; sender++) {
-    const char* message = instruments[sender]->getMessage(buffer, MAX_MESSAGE_LENGTH);
+    const char* sentence = instruments[sender]->getSentence(buffer, MAX_SENTENCE_LENGTH);
 
-    if (message)
-      broadcast(message, instruments[sender]->getId());
+    if (sentence)
+      broadcast(sentence, instruments[sender]->getId());
   }
 }
 
