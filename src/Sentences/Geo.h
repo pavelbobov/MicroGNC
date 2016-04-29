@@ -58,7 +58,7 @@ public:
   //Great-circle length of the arc in meters from start to end point (accuracy %0.5)
   float length() const;
 
-  //Signed great-circle distance fin meters rom the given point to the arc,
+  //Signed great-circle distance in meters from the given point to the arc,
   //a.k.a. cross-track error (XTE)
   float distance(const Point& p) const;
 };
