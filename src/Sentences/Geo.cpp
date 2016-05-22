@@ -18,6 +18,10 @@
 #include <math.h>
 #include "Geo.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
+
 const float earthR = 6371009;
 const float degToRad = 0.01745329251994;//M_PI / 180;
 const float radToDeg = 57.29577951308233;//180/M_PI
