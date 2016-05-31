@@ -54,7 +54,7 @@ public:
    * Gets sentence from instrument
    * 
    * @param  sentence buffer
-   * @param  maxSize buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 caracters)
+   * @param  maxSize buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 characters)
    * @return message string or NULL if no sentences are available
    */
   virtual char* getSentence(char[] /* sentence */, size_t /* maxSize */) { return NULL; }

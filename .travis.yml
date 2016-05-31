@@ -11,6 +11,7 @@ install:
   - ln -s $PWD /usr/local/share/arduino/libraries/MicroGNC
 script:
   - arduino --verify --board arduino:avr:uno $PWD/examples/CourseComputer/CourseComputer.ino
+  - arduino --verify --board arduino:avr:uno $PWD/examples/Sailboat/Sailboat.ino
   - cd $PWD/tests
   - make
   - ./tests

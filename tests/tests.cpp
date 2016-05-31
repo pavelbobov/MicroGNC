@@ -5,10 +5,11 @@
 #include "../src/Instruments/CourseComputer.h"
 #include "../src/Sentences/StrUtils.h"
 
-#define GPRMC_SAMPLE                 "$GPRMC,052420.600,A,3404.3640,N,11708.7536,W,0.38,341.13,120316,,,D*7C"
-#define GPWPL_SAMPLE                 "$GPWPL,3404.3640,N,11708.7529,W,TEST*4B"
-#define GPBWC_SAMPLE                 "$GPBWC,220516,5130.02,N,00046.34,W,213.8,T,218.0,M,0004.6,N,EGLM*21"
+#define GPRMC_SAMPLE "$GPRMC,052420.600,A,3404.3640,N,11708.7536,W,0.38,341.13,120316,,,D*7C"
+#define GPWPL_SAMPLE "$GPWPL,3404.3640,N,11708.7529,W,TEST*4B"
+#define GPBWC_SAMPLE "$GPBWC,220516,5130.02,N,00046.34,W,213.8,T,218.0,M,0004.6,N,EGLM*21"
 //#define GPBWC_SAMPLE                 "$GPBWC,081837,,,,,,T,,M,,N,*13"
+#define WIMWV_SAMPLE "$WIMWV,214.8,R,0.1,K,A*28"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -65,6 +66,21 @@ int main( int argc, const char* argv[] )
     courseComputer.getSentence(buffer, NMEA_MAX_LENGTH);
     //printf("%s\n", buffer);
     assert(bwc.set(buffer));
+  }
+
+  {
+    MWVSentence mwv;
+    mwv.set(WIMWV_SAMPLE);
+    assert(strcmp(ftoa(mwv.windAngle, buffer, 1), "214.8") == 0);
+    assert(mwv.reference == 'R');
+    assert(strcmp(ftoa(mwv.windSpeed, buffer, 1), "0.1") == 0);
+    assert(mwv.windSpeedUnits == 'K');
+    mwv.windAngle = 123.4;
+    mwv.reference = 'R';
+    mwv.windSpeed = 12.3;
+    mwv.windSpeedUnits = 'K';
+    mwv.get(buffer, NMEA_MAX_LENGTH);
+    assert(strcmp(buffer, "$WIMWV,123.4,R,12.3,K,A*12") == 0);
   }
 
   return 0;
