@@ -1,5 +1,5 @@
 /*
- * RCBoat.ino
+ * Sailboat.ino
  * 
  * Example Arduino sketch for MicroGNC library
  *
@@ -23,6 +23,7 @@
  
 #include <SoftwareSerial.h>
 #include "MicroGNC.h"
+#include "TX23UWindSensor.h"
 
 //Analog pins
 #define RUDDER_CURRENT  A0 
@@ -67,6 +68,7 @@ StreamTalker gps("GP", &gpsSerial);
 SoftwareSerial teleSerial(TELE_TX, TELE_RX);
 StreamTalker serial("UP", &teleSerial);
 CourseComputer courseComputer;
+TX23UWindSensor windSensor(WIND_VANE_TXD);
 
 Bus bus;
 
@@ -88,12 +90,13 @@ void setup()
   gpsSerial.setTimeout(100);
   
   gps.putSentence(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-  gps.putSentence(PMTK_SET_NMEA_UPDATE_5HZ);
+  gps.putSentence(PMTK_SET_NMEA_UPDATE_1HZ);
   
   gps.addFilter("$PMTK");
 
   courseComputer.putSentence(GPWPL_SAMPLE);
 
+  bus.subscribe(&windSensor);
   bus.subscribe(&gps);
   bus.subscribe(&courseComputer);
   bus.subscribe(&serial);

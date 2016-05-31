@@ -33,6 +33,7 @@
 #define NMEA_RMC "RMC"
 #define NMEA_WPL "WPL"
 #define NMEA_BWC "BWC"
+#define NMEA_MWV "MWV"
 
 //Code strings
 #define NORTH "N"
@@ -119,10 +120,10 @@ public:
 
 /*
  * BWC - Bearing & Distance to Waypoint - Great Circle
- *                                                        12
- *        1         2       3 4        5 6   7 8   9 10  11|    13 14
- *        |         |       | |        | |   | |   | |   | |    |   |
- * $--BWC,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x.x,T,x.x,M,x.x,N,c--c,m,*hh<CR><LF>
+ *
+ *        1         2       3 4        5 6   7 8   9 10 11 12  13 14
+ *        |         |       | |        | |   | |   | |   | |    |  |
+ * $--BWC,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x.x,T,x.x,M,x.x,N,c--c,m*hh<CR><LF>
  * 
  * Field Number:
  * 1. UTC Time
@@ -155,6 +156,35 @@ public:
   
   BWCSentence();
   ~BWCSentence();
+
+  char*  get(char buffer[], size_t buflen) const;
+  bool   set(const char str[]);
+};
+
+/*
+ * MWV - Wind Speed and Angle
+          1   2 3   4 5 6
+          |   | |   | | |
+ * $--MWV,x.x,a,x.x,a,a*hh<CR><LF>
+ * Field Number:
+ * 1. Wind Angle, 0 to 360 degrees
+ * 2. Reference, R = Relative, T = True
+ * 3. Wind Speed
+ * 4. Wind Speed Units, K/M/N
+ * 5. Status, A = Data Valid
+ * 6. Checksum
+ *
+ * Example: $WIMWV,214.8,R,0.1,K,A*28
+ */
+class MWVSentence : public Sentence {
+public:
+  float windAngle;
+  char  reference;
+  float windSpeed;
+  char  windSpeedUnits;
+
+  MWVSentence();
+  ~MWVSentence();
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);
