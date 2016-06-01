@@ -112,7 +112,7 @@ void setup()
 
 void loop() 
 {
-  unsigned long t = millis();
+  //unsigned long t = millis();
   
   bus.exchange();
 
@@ -150,11 +150,9 @@ void loop()
     }
   }
 
-  //delay(100);
-  
-  unsigned long elapsed = millis() - t;
-  if (elapsed > 100) {
-    teleSerial.print("t = "); 
-    teleSerial.println(elapsed);
-  }
+//  unsigned long elapsed = millis() - t;
+//  if (elapsed > 100) {
+//    teleSerial.print("t = "); 
+//    teleSerial.println(elapsed);
+//  }
 }
