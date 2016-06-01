@@ -15,8 +15,9 @@
  */
 class TX23UWindSensor : public Instrument {
 
-  int TxD;
+  int           TxD;
   unsigned long start;
+  bool          requestData;
 
 public:
   /*
