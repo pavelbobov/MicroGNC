@@ -67,7 +67,7 @@ SoftwareSerial gpsSerial(GPS_TX, GPS_RX);
 StreamTalker gps("GP", &gpsSerial);
 SoftwareSerial teleSerial(TELE_TX, TELE_RX);
 StreamTalker serial("UP", &teleSerial);
-CourseComputer courseComputer;
+//CourseComputer courseComputer;
 TX23UWindSensor windSensor(WIND_VANE_TXD);
 
 Bus bus;
@@ -94,11 +94,11 @@ void setup()
   
   gps.addFilter("$PMTK");
 
-  courseComputer.putSentence(GPWPL_SAMPLE);
+  //courseComputer.putSentence(GPWPL_SAMPLE);
 
   bus.subscribe(&windSensor);
   bus.subscribe(&gps);
-  bus.subscribe(&courseComputer);
+  //bus.subscribe(&courseComputer);
   bus.subscribe(&serial);
 
   pinMode(RUDDER_DIRECTION, OUTPUT);
@@ -117,8 +117,8 @@ void loop()
   bus.exchange();
 
   //read the pushbutton value into a variable
-  int ch1 = pulseIn(RUDDER_RC,25000) ;//- 1500;
-  int ch2 = pulseIn(WINCH_RC,25000);// - 1500;
+  int ch1 = pulseIn(RUDDER_RC, HIGH, 3000);//- 1500;
+  int ch2 = pulseIn(WINCH_RC, HIGH, 3000);// - 1500;
   //print out the value of the pushbutton
   //teleSerial.print(ch1);
   //teleSerial.print(" ");
@@ -150,8 +150,11 @@ void loop()
     }
   }
 
-  delay(100);
+  //delay(100);
   
   unsigned long elapsed = millis() - t;
-  //Serial.print("t = "); Serial.println(elapsed);
+  if (elapsed > 100) {
+    teleSerial.print("t = "); 
+    teleSerial.println(elapsed);
+  }
 }
