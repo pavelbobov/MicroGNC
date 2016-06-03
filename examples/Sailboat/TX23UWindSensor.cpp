@@ -1,16 +1,32 @@
 /*
  * TX23UWindSensor.cpp
  *
- * Created on: May 27, 2016
- *     Author: pavel
+ * Driver for LaCrosse TX-23U wind sensor.
+ *
+ * (C) Copyright 2016 Pavel Bobov.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #include <Arduino.h>
 #include "TX23UWindSensor.h"
 
+inline byte nibble(bool* data, byte n) {
+  return data[n + 3] << 3 | data[n + 2] << 2 | data[n + 1] << 1 | data[n];
+}
 
 TX23UWindSensor::TX23UWindSensor(int pin) :
-Instrument("TX23U"), TxD(pin), start(millis()), requestData(false) {
+  Instrument("TX23U"), TxD(pin), start(millis()), requestData(false) {
 }
 
 TX23UWindSensor::~TX23UWindSensor() {
@@ -21,7 +37,7 @@ char* TX23UWindSensor::getSentence(char sentence[], size_t maxSize) {
     if (millis() - start < 4000)
       return NULL;
 
-    pinMode(TxD, OUTPUT); // pin to output
+    pinMode(TxD, OUTPUT);
     digitalWrite(TxD, HIGH);
 
     delay(1);
@@ -36,53 +52,48 @@ char* TX23UWindSensor::getSentence(char sentence[], size_t maxSize) {
     if (millis() - start < 500)
       return NULL;
 
+    requestData = false;
+    start = millis();
+
+    pinMode(TxD, OUTPUT);
     digitalWrite(TxD, HIGH);
 
-    delay(15); // wait 1-2ms high, + half of the low period, approx 9ms = 11ms
+    delay(16); // wait 1-2ms high, + half of the low period, approx 9ms = 11ms
 
     pinMode(TxD, INPUT);
     int pulse = pulseIn(TxD, HIGH, 10000) / 2;
 
     delayMicroseconds(pulse * 3 + pulse / 2);
 
-    const byte MAXDATA = 36;
-    bool data[MAXDATA];
+    bool data[20];
+    for (byte pointer = 0; pointer < 36; pointer++) {
+      bool b = digitalRead(TxD) ? 1 : 0;
 
-    for (int pointer = 0; pointer < MAXDATA; pointer++) {
-      data[pointer] = digitalRead(TxD) ? true : false;
+      if (pointer < 20)
+        data[pointer] = b;
+      else if (data[pointer - 20] == b)
+        return NULL;
+
       delayMicroseconds(pulse - 5);
     }
 
-    requestData = false;
-    start = millis();
-
     // validate data
-    for(int i = 0; i <= 15; i++)
-      if (data[i] == data[i + 20])
-        return NULL;
+    byte checksum = 0;
+    for (byte i = 0; i < 4; i++)
+      checksum += nibble(data, i << 2);
 
-    byte nibbles[5];
-    for (byte i = 0; i < 5; i++) {
-      byte n = i << 2;
-      nibbles[i] = data[n + 3] << 3 | data[n + 2] << 2 | data[n + 1] << 1 | data[n];
-    }
-
-    if (nibbles[4] != ((nibbles[0] + nibbles[1] + nibbles[2] + nibbles[3]) & 0x0F))
+    if (nibble(data, 16) != (checksum & 0x0F))
       return NULL;
 
     //process data
-
-    byte direction = data[3] << 3 | data[2] << 2 | data[1] << 1 | data[0];
-
-    int speed = 0;
-    for (int pointer = 15; pointer >= 4; pointer--)
+    unsigned int speed = 0;
+    for (byte pointer = 15; pointer >= 4; pointer--)
       speed |= data[pointer] << (pointer - 4);
 
     MWVSentence mwv;
-    mwv.windAngle = fmod(direction * 22.5 + 281.25, 360.0);
+    mwv.windAngle = fmod(nibble(data, 0) * 22.5 + 281.25, 360.0);
     mwv.windSpeed = speed * 0.194384; //knots
 
     return mwv.get(sentence, maxSize);
   }
 }
-
