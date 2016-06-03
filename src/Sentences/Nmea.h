@@ -34,6 +34,7 @@
 #define NMEA_WPL "WPL"
 #define NMEA_BWC "BWC"
 #define NMEA_MWV "MWV"
+#define NMEA_HDG "HDG"
 
 //Code strings
 #define NORTH "N"
@@ -185,6 +186,35 @@ public:
 
   MWVSentence();
   ~MWVSentence();
+
+  char*  get(char buffer[], size_t buflen) const;
+  bool   set(const char str[]);
+};
+
+/*
+ * HDG - Heading - Deviation & Variation
+ *        1   2   3 4   5 6
+ *        |   |   | |   | |
+ * $--HDG,x.x,x.x,a,x.x,a*hh<CR><LF>
+ *
+ * Field Number:
+ * 1. Magnetic Sensor heading in degrees
+ * 2. Magnetic Deviation, degrees
+ * 3. Magnetic Deviation direction, E = Easterly, W = Westerly
+ * 4. Magnetic Variation degrees
+ * 5. Magnetic Variation direction, E = Easterly, W = Westerly
+ * 6. Checksum
+ *
+ * Example: $HCHDG,98.3,0.0,E,12.6,W*57
+ */
+class HDGSentence : public Sentence {
+public:
+  float magneticHeading;
+  float magneticDeviation;
+  float magneticVariation;
+
+  HDGSentence();
+  ~HDGSentence();
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);

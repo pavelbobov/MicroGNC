@@ -10,6 +10,7 @@
 #define GPBWC_SAMPLE "$GPBWC,220516,5130.02,N,00046.34,W,213.8,T,218.0,M,0004.6,N,EGLM*21"
 //#define GPBWC_SAMPLE                 "$GPBWC,081837,,,,,,T,,M,,N,*13"
 #define WIMWV_SAMPLE "$WIMWV,214.8,R,0.1,K,A*28"
+#define HCHDG_SAMPLE "$HCHDG,98.3,0.0,E,12.6,W*57"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -81,6 +82,20 @@ int main( int argc, const char* argv[] )
     mwv.windSpeedUnits = 'K';
     mwv.get(buffer, NMEA_MAX_LENGTH);
     assert(strcmp(buffer, "$WIMWV,123.4,R,12.3,K,A*12") == 0);
+  }
+
+  {
+    HDGSentence hdg;
+    hdg.set(HCHDG_SAMPLE);
+    assert(strcmp(ftoa(hdg.magneticHeading, buffer, 1), "98.3") == 0);
+    assert(strcmp(ftoa(hdg.magneticDeviation, buffer, 1), "0.0") == 0);
+    assert(strcmp(ftoa(hdg.magneticVariation, buffer, 1), "12.6") == 0);
+    hdg.magneticHeading = 123.4;
+    hdg.magneticDeviation = -12.3;
+    hdg.magneticVariation = -23.4;
+    hdg.get(buffer, NMEA_MAX_LENGTH);
+    //printf("%s\n", buffer);
+    assert(strcmp(buffer, "$HCHDG,123.4,12.3,E,23.3,E*44") == 0);
   }
 
   return 0;
