@@ -11,6 +11,7 @@
 //#define GPBWC_SAMPLE                 "$GPBWC,081837,,,,,,T,,M,,N,*13"
 #define WIMWV_SAMPLE "$WIMWV,214.8,R,0.1,K,A*28"
 #define HCHDG_SAMPLE "$HCHDG,98.3,0.0,E,12.6,W*57"
+#define RCPWM_SAMPLE "$RCPWM,1,1500*6E"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -96,6 +97,18 @@ int main( int argc, const char* argv[] )
     hdg.get(buffer, NMEA_MAX_LENGTH);
     //printf("%s\n", buffer);
     assert(strcmp(buffer, "$HCHDG,123.4,12.3,E,23.3,E*44") == 0);
+  }
+
+  {
+    PWMSentence pwm;
+    pwm.set(RCPWM_SAMPLE);
+    assert(pwm.channel == 1);
+    assert(pwm.value == 1500);
+    pwm.channel = 2;
+    pwm.value = 123;
+    pwm.get(buffer, NMEA_MAX_LENGTH);
+    //printf("%s\n", buffer);
+    assert(strcmp(buffer, "$RCPWM,2,123*59") == 0);
   }
 
   return 0;
