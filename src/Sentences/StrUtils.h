@@ -34,7 +34,7 @@ const char* nextToken(const char* p);
  */
 char* strend(char* str);
 
-char* ltoa2(long l, char str[], int precision);
+char* ltoa2(long l, char str[], int base);
 
 /*
  * Converts floating point number to decimal string representation

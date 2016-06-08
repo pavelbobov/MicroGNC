@@ -60,7 +60,7 @@ public:
   virtual char* getSentence(char[] /* sentence */, size_t /* maxSize */) { return NULL; }
 
   /*
-   * Puts senetnce to the instrument
+   * Puts sentence to the instrument
    * 
    * @param sentence sentence
    * @return true if instrument accepted the sentence

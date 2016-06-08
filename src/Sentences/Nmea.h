@@ -29,12 +29,21 @@
 #include "Geo.h"
 #include "Sentence.h"
 
-//Sentence tags
-#define NMEA_RMC "RMC"
-#define NMEA_WPL "WPL"
-#define NMEA_BWC "BWC"
-#define NMEA_MWV "MWV"
-#define NMEA_HDG "HDG"
+//NMEA sentences tags
+#define NMEA_RMC  "RMC" //Recommended Minimum Navigation Information
+#define NMEA_WPL  "WPL" //Waypoint Location
+#define NMEA_BWC  "BWC" //Bearing & Distance to Waypoint - Great Circle
+#define NMEA_MWV  "MWV" //Wind Speed and Angle
+#define NMEA_HDG  "HDG" //Heading - Deviation & Variation
+//Proprietary tags
+#define NMEA_PWM  "PWM" //Remote Control Pulse Width Modulation
+
+//NMEA talker IDs
+#define TALKER_WI "WI"  //Weather Instrument
+#define TALKER_GP "GP"  //GPS
+#define TALKER_RC "RC"  //Radio Control
+#define TALKER_HC "HC"  //Heading - Magnetic Compass
+#define TALKER_IN "IN"  //Integrated Navigation
 
 //Code strings
 #define NORTH "N"
@@ -215,6 +224,30 @@ public:
 
   HDGSentence();
   ~HDGSentence();
+
+  char*  get(char buffer[], size_t buflen) const;
+  bool   set(const char str[]);
+};
+
+/*
+ * PWM - Remote Control Pulse Width Modulation
+ *        1  3
+ *        |  |
+ * $RCPWM,x,xxxx*hh<CR><LF>
+ * Field Number:
+ * 1. Channel number
+ * 2. Channel PWM value
+ * 3. Checksum
+ *
+ * Example: $RCPWM,1,1500*6E
+ */
+class PWMSentence : public Sentence {
+public:
+  int  channel;
+  int  value;
+
+  PWMSentence();
+  ~PWMSentence();
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);

@@ -1,5 +1,5 @@
 /*
- * MWVSentence.cpp
+ * RCHSentence.cpp
  *
  * (C) Copyright 2016 Pavel Bobov.
  *
@@ -21,15 +21,14 @@
 #include "Nmea.h"
 #include "StrUtils.h"
 
-MWVSentence::MWVSentence() :
-    windAngle(0), reference('R'), windSpeed(0), windSpeedUnits('N'),
-    Sentence(TALKER_WI, NMEA_MWV) {
+PWMSentence::PWMSentence() :
+  channel(1), value(0), Sentence(TALKER_RC, NMEA_PWM)  {
 }
 
-MWVSentence::~MWVSentence() {
+PWMSentence::~PWMSentence() {
 }
 
-char* MWVSentence::get(char str[], size_t buflen) const {
+char* PWMSentence::get(char str[], size_t buflen) const {
   if (str == NULL || buflen < NMEA_MAX_LENGTH)
     return NULL;
 
@@ -39,27 +38,22 @@ char* MWVSentence::get(char str[], size_t buflen) const {
 
   char* p = strend(str);
 
-  if (windAngle >= 0) {
-    ftoa(windAngle, p, 1);
+  if (channel >= 0) {
+    ltoa2(channel, p, 10);
   }
 
-  char ref[] = {',', reference, ',', '\0'};
+  strcat(str, ",");
 
-  strcat(p, ref);
+  p = strend(str);
 
-  if (windSpeed >= 0) {
-    p = strend(p);
-    ftoa(windSpeed, p, 1);
+  if (value >= 0) {
+    ltoa2(value, p, 10);
   }
-
-  char units[] = {',', windSpeedUnits, ',', 'A', '\0'};
-
-  strcat(p, units);
 
   return addChecksum(str);
 }
 
-bool MWVSentence::set(const char nmea[]) {
+bool  PWMSentence::set(const char nmea[]) {
   if (!valid(nmea))
     return false;
 
@@ -72,24 +66,16 @@ bool MWVSentence::set(const char nmea[]) {
   p = nextToken(p);
 
   if (',' != *p)
-    windAngle = atof(p);
+    channel = atoi(p);
   else
-    windAngle = -1;
-
-  p = nextToken(p);
-
-  reference = p[0];
+    channel = -1;
 
   p = nextToken(p);
 
   if (',' != *p)
-    windSpeed = atof(p);
+    value = atof(p);
   else
-    windSpeed = -1;
-
-  p = nextToken(p);
-
-  windSpeedUnits = p[0];
+    value = -1;
 
   return true;
 }

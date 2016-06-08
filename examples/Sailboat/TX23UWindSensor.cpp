@@ -26,7 +26,7 @@ inline byte nibble(bool* data, byte n) {
 }
 
 TX23UWindSensor::TX23UWindSensor(int pin) :
-  Instrument("TX23U"), TxD(pin), start(millis()), requestData(false) {
+  Instrument(TALKER_WI), TxD(pin), start(millis()), requestData(false) {
 }
 
 TX23UWindSensor::~TX23UWindSensor() {

@@ -26,7 +26,7 @@ const float DEGREES_IN_MINUTE = 1.0/60.0;
 const float MINUTES_IN_DEGREE = 60.0;
 
 RMCSentence::RMCSentence() :
-  Sentence("GP", NMEA_RMC),
+  Sentence(TALKER_GP, NMEA_RMC),
   milliseconds(0), fix(false),
   speed(0), course(0), variation(0) {
 }
