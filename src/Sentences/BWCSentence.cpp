@@ -22,7 +22,7 @@
 #include "Nmea.h"
 #include "StrUtils.h"
 
-BWCSentence::BWCSentence() : Sentence("GP", NMEA_BWC),
+BWCSentence::BWCSentence() : Sentence(TALKER_GP, NMEA_BWC),
                              milliseconds(0), bearingTrue(-1),
                              bearingMagnetic(-1), distance(-1) {
   waypointId[0] = '\0';

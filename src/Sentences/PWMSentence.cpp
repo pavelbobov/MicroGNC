@@ -22,7 +22,7 @@
 #include "StrUtils.h"
 
 PWMSentence::PWMSentence() :
-  channel(1), value(0), Sentence("RC", NMEA_PWM)  {
+  channel(1), value(0), Sentence(TALKER_RC, NMEA_PWM)  {
 }
 
 PWMSentence::~PWMSentence() {

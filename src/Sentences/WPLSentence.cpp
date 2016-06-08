@@ -2,7 +2,7 @@
 #include "Nmea.h"
 #include "StrUtils.h"
   
-WPLSentence::WPLSentence() : Sentence("GP", NMEA_WPL) {
+WPLSentence::WPLSentence() : Sentence(TALKER_GP, NMEA_WPL) {
   name[0] = '\0';
 }
   

@@ -24,6 +24,7 @@
 #include <SoftwareSerial.h>
 #include "MicroGNC.h"
 #include "TX23UWindSensor.h"
+#include "CustomServo.h"
 
 //Analog pins
 #define RUDDER_CURRENT  A0 
@@ -69,6 +70,10 @@ SoftwareSerial teleSerial(TELE_TX, TELE_RX);
 StreamTalker serial("UP", &teleSerial);
 //CourseComputer courseComputer;
 TX23UWindSensor windSensor(WIND_VANE_TXD);
+RCChannel ch1(1, RUDDER_RC);
+RCChannel ch2(2, WINCH_RC);
+CustomServo rudder(1, RUDDER_PWM, RUDDER_DIRECTION);
+CustomServo winch(2, WINCH_PWM, WINCH_DIRECTION);
 
 Bus bus;
 
@@ -100,14 +105,10 @@ void setup()
   bus.subscribe(&gps);
   //bus.subscribe(&courseComputer);
   bus.subscribe(&serial);
-
-  pinMode(RUDDER_DIRECTION, OUTPUT);
-  pinMode(WINCH_DIRECTION, OUTPUT);
-  pinMode(RUDDER_PWM, OUTPUT);
-  pinMode(WINCH_PWM, OUTPUT);
-  
-  pinMode(RUDDER_RC, INPUT);
-  pinMode(WINCH_RC, INPUT);
+  bus.subscribe(&ch1);
+  bus.subscribe(&ch2);
+  bus.subscribe(&rudder);
+  bus.subscribe(&winch);
 }
 
 void loop() 
@@ -115,40 +116,6 @@ void loop()
   //unsigned long t = millis();
   
   bus.exchange();
-
-  //read the pushbutton value into a variable
-  int ch1 = pulseIn(RUDDER_RC, HIGH, 3000);//- 1500;
-  int ch2 = pulseIn(WINCH_RC, HIGH, 3000);// - 1500;
-  //print out the value of the pushbutton
-  //teleSerial.print(ch1);
-  //teleSerial.print(" ");
-  //teleSerial.println(ch2);
-
-  if (ch1 == 0) {
-    //No RC signal
-    analogWrite(RUDDER_PWM, 0);
-    analogWrite(WINCH_PWM, 0);
-  } else {
-    if (ch1 > 1510) {
-      analogWrite(RUDDER_PWM, min((ch1 - 1500)/2, 255));
-      digitalWrite(RUDDER_DIRECTION, HIGH);
-    } else if (ch1 < 1490) {
-      analogWrite(RUDDER_PWM, min((1500 - ch1)/2, 255));
-      digitalWrite(RUDDER_DIRECTION, LOW);
-    } else {
-      analogWrite(RUDDER_PWM, 0);
-    }
-    
-    if (ch2 > 1510) {
-      analogWrite(WINCH_PWM, min((ch2 - 1500)/2, 255));
-      digitalWrite(WINCH_DIRECTION, HIGH);
-    } else if (ch2 < 1490) {
-      analogWrite(WINCH_PWM, min((1500 - ch2)/2, 255));
-      digitalWrite(WINCH_DIRECTION, LOW);
-    } else {
-      analogWrite(WINCH_PWM, 0);  
-    }
-  }
 
 //  unsigned long elapsed = millis() - t;
 //  if (elapsed > 100) {

@@ -24,7 +24,7 @@
 
 HDGSentence::HDGSentence() :
    magneticHeading(0), magneticDeviation(NAN), magneticVariation(NAN),
-   Sentence("HC", NMEA_HDG) {
+   Sentence(TALKER_HC, NMEA_HDG) {
 }
 
 HDGSentence::~HDGSentence() {

@@ -23,7 +23,7 @@
 
 MWVSentence::MWVSentence() :
     windAngle(0), reference('R'), windSpeed(0), windSpeedUnits('N'),
-    Sentence("WI", NMEA_MWV) {
+    Sentence(TALKER_WI, NMEA_MWV) {
 }
 
 MWVSentence::~MWVSentence() {

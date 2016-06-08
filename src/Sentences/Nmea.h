@@ -38,6 +38,13 @@
 //Proprietary tags
 #define NMEA_PWM  "PWM" //Remote Control Pulse Width Modulation
 
+//NMEA talker IDs
+#define TALKER_WI "WI"  //Weather Instrument
+#define TALKER_GP "GP"  //GPS
+#define TALKER_RC "RC"  //Radio Control
+#define TALKER_HC "HC"  //Heading - Magnetic Compass
+#define TALKER_IN "IN"  //Integrated Navigation
+
 //Code strings
 #define NORTH "N"
 #define SOUTH "S"
@@ -229,7 +236,7 @@ public:
  * $RCPWM,x,xxxx*hh<CR><LF>
  * Field Number:
  * 1. Channel number
- * 2. Channel value
+ * 2. Channel PWM value
  * 3. Checksum
  *
  * Example: $RCPWM,1,1500*6E

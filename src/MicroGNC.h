@@ -25,6 +25,7 @@
 #include "Instruments/Instrument.h"
 #include "Instruments/StreamTalker.h"
 #include "Instruments/CourseComputer.h"
+#include "Instruments/RCChannel.h"
 #include "Sentences/Sentence.h"
 #include "Sentences/Nmea.h"
 

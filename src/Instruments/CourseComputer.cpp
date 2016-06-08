@@ -21,7 +21,7 @@
 #include <math.h>
 #include "CourseComputer.h"
 
-CourseComputer::CourseComputer() : Instrument("IN") {
+CourseComputer::CourseComputer() : Instrument(TALKER_IN) {
 }
 
 CourseComputer::~CourseComputer() {
