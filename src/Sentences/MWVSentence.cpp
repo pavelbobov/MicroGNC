@@ -18,19 +18,20 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "Nmea.h"
+
+#include "Sentences.h"
 #include "StrUtils.h"
 
 MWVSentence::MWVSentence() :
-    windAngle(0), reference('R'), windSpeed(0), windSpeedUnits('N'),
-    Sentence(TALKER_WI, NMEA_MWV) {
+    Sentence(TALKER_WI, TAG_MWV),
+    windAngle(0), reference('R'), windSpeed(0), windSpeedUnits('N') {
 }
 
 MWVSentence::~MWVSentence() {
 }
 
 char* MWVSentence::get(char str[], size_t buflen) const {
-  if (str == NULL || buflen < NMEA_MAX_LENGTH)
+  if (str == NULL || buflen < MAX_SENTENCE_LENGTH)
     return NULL;
 
   addHead(str);
@@ -59,14 +60,14 @@ char* MWVSentence::get(char str[], size_t buflen) const {
   return addChecksum(str);
 }
 
-bool MWVSentence::set(const char nmea[]) {
-  if (!valid(nmea))
+bool MWVSentence::set(const char str[]) {
+  if (!valid(str))
     return false;
 
-  if (!matches(nmea))
+  if (!matches(str))
     return false;
 
-  const char *p = nmea;
+  const char *p = str;
 
   // get time
   p = nextToken(p);

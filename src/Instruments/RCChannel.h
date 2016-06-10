@@ -10,6 +10,9 @@
 
 #include "Instrument.h"
 
+#define PWM_CENTER 1500 //microseconds
+#define PWM_NOISE  10   //microseconds
+
 /*
  * Reads input from radio controller receiver
  */
@@ -33,7 +36,7 @@ public:
   virtual ~RCChannel();
 
   /*
-   * Reads input from radio controller receiver formatted as RCH NMEA sentence.
+   * Reads input from radio controller receiver formatted as PWM sentence.
    *
    * @param  sentence buffer
    * @param  maxSize buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 characters)

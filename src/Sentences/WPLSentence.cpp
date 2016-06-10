@@ -1,8 +1,9 @@
 #include <string.h>
-#include "Nmea.h"
+
+#include "Sentences.h"
 #include "StrUtils.h"
   
-WPLSentence::WPLSentence() : Sentence(TALKER_GP, NMEA_WPL) {
+WPLSentence::WPLSentence() : Sentence(TALKER_GP, TAG_WPL) {
   name[0] = '\0';
 }
   
@@ -10,7 +11,7 @@ WPLSentence::~WPLSentence() {
 }
 
 char* WPLSentence::get(char str[], size_t buflen) const {
-  if (str == NULL || buflen < NMEA_MAX_LENGTH)
+  if (str == NULL || buflen < MAX_SENTENCE_LENGTH)
     return NULL;
     
   addHead(str);
@@ -28,14 +29,14 @@ char* WPLSentence::get(char str[], size_t buflen) const {
   return addChecksum(str);
 }
 
-bool WPLSentence::set(const char nmea[]) {
-  if (!valid(nmea))
+bool WPLSentence::set(const char str[]) {
+  if (!valid(str))
     return false;
 
-  if (!matches(nmea))
+  if (!matches(str))
     return false;
   
-  const char *p = nmea;
+  const char *p = str;
 
   // get time
   p = nextToken(p);

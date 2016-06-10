@@ -19,7 +19,7 @@
 #ifndef COURSECOMPUTER_H_
 #define COURSECOMPUTER_H_
 
-#include "../Sentences/Nmea.h"
+#include "../Sentences/Sentences.h"
 #include "Instrument.h"
 
 /*

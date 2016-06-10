@@ -1,5 +1,5 @@
 /*
- * RCHSentence.cpp
+ * MCSSentence.cpp
  *
  * (C) Copyright 2016 Pavel Bobov.
  *
@@ -22,15 +22,14 @@
 #include "Sentences.h"
 #include "StrUtils.h"
 
-PWMSentence::PWMSentence() :
-  Sentence(TALKER_RC, TAG_PWM),
-  channel(1), pulse(0) {
+MCSSentence::MCSSentence() :
+  Sentence(TALKER_ER, TAG_MCS), motor(1), current(0)  {
 }
 
-PWMSentence::~PWMSentence() {
+MCSSentence::~MCSSentence() {
 }
 
-char* PWMSentence::get(char str[], size_t buflen) const {
+char* MCSSentence::get(char str[], size_t buflen) const {
   if (str == NULL || buflen < MAX_SENTENCE_LENGTH)
     return NULL;
 
@@ -40,22 +39,22 @@ char* PWMSentence::get(char str[], size_t buflen) const {
 
   char* p = strend(str);
 
-  if (channel >= 0) {
-    ltoa2(channel, p, 10);
+  if (motor >= 0) {
+    ltoa2(motor, p, 10);
   }
 
   strcat(str, ",");
 
   p = strend(str);
 
-  if (pulse >= 0) {
-    ltoa2(pulse, p, 10);
+  if (current >= 0) {
+    ftoa(current, p, 3);
   }
 
   return addChecksum(str);
 }
 
-bool  PWMSentence::set(const char str[]) {
+bool  MCSSentence::set(const char str[]) {
   if (!valid(str))
     return false;
 
@@ -68,16 +67,16 @@ bool  PWMSentence::set(const char str[]) {
   p = nextToken(p);
 
   if (',' != *p)
-    channel = atoi(p);
+    motor = atoi(p);
   else
-    channel = -1;
+    motor = -1;
 
   p = nextToken(p);
 
   if (',' != *p)
-    pulse = atof(p);
+    current = atof(p);
   else
-    pulse = -1;
+    current = -1;
 
   return true;
 }

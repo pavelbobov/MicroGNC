@@ -19,14 +19,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include "Nmea.h"
+
+#include "Sentences.h"
 #include "StrUtils.h"
 
 const float DEGREES_IN_MINUTE = 1.0/60.0;
 const float MINUTES_IN_DEGREE = 60.0;
 
 RMCSentence::RMCSentence() :
-  Sentence(TALKER_GP, NMEA_RMC),
+  Sentence(TALKER_GP, TAG_RMC),
   milliseconds(0), fix(false),
   speed(0), course(0), variation(0) {
 }
@@ -35,7 +36,7 @@ RMCSentence::~RMCSentence() {
 }
 
 char* RMCSentence::get(char str[], size_t buflen) const {
-  if (str == NULL || buflen < NMEA_MAX_LENGTH)
+  if (str == NULL || buflen < MAX_SENTENCE_LENGTH)
     return NULL;
     
   addHead(str);
@@ -84,14 +85,14 @@ char* RMCSentence::get(char str[], size_t buflen) const {
   return addChecksum(str);
 }
 
-bool RMCSentence::set(const char nmea[]) {
-  if (!valid(nmea))
+bool RMCSentence::set(const char str[]) {
+  if (!valid(str))
     return false;
 
-  if (!matches(nmea))
+  if (!matches(str))
     return false;
   
-  const char *p = nmea;
+  const char *p = str;
 
   // get time
   p = nextToken(p);

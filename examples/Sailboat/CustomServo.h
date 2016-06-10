@@ -31,6 +31,7 @@ class CustomServo: public Instrument {
   int channel;
   int pwmPin;
   int directionPin;
+  int currentSensingPin;
 
 public:
   /*
@@ -40,12 +41,21 @@ public:
    * @param pwmPin PWM pin number
    * @param directionPin direction pin number
    */
-  CustomServo(int channel, int pwmPin, int directionPin);
+  CustomServo(int channel, int pwmPin, int directionPin, int currentSensingPin);
 
   /*
    * Destructor
    */
   virtual ~CustomServo();
+
+  /*
+   * Reads DC motor current as MCS sentence.
+   *
+   * @param  sentence buffer
+   * @param  maxSize buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 characters)
+   * @return message string or NULL if no sentences are available
+   */
+  virtual char* getSentence(char sentence[], size_t maxSize);
 
   /*
     * Controls speed and direction of DC motor based on the values of

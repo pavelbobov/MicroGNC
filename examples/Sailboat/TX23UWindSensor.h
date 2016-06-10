@@ -46,7 +46,7 @@ public:
   virtual ~TX23UWindSensor();
 
   /*
-   * Reads wind speed and angle from the sensor formatted as MWV NMEA sentences.
+   * Reads wind speed and angle from the sensor formatted as MWV sentence.
    *
    * @param  sentence buffer
    * @param  maxSize buffer size. Recommended buffer size is MAX_MESSAGE_LENGTH (83 characters)
