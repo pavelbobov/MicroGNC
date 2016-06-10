@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../src/Sentences/Nmea.h"
 #include "../src/Instruments/CourseComputer.h"
+#include "../src/Sentences/Sentences.h"
 #include "../src/Sentences/StrUtils.h"
 
 #define GPRMC_SAMPLE "$GPRMC,052420.600,A,3404.3640,N,11708.7536,W,0.38,341.13,120316,,,D*7C"
@@ -12,6 +12,7 @@
 #define WIMWV_SAMPLE "$WIMWV,214.8,R,0.1,K,A*28"
 #define HCHDG_SAMPLE "$HCHDG,98.3,0.0,E,12.6,W*57"
 #define RCPWM_SAMPLE "$RCPWM,1,1500*6E"
+#define ERMCS_SAMPLE "$ERMCS,1,0.321*55"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -28,7 +29,7 @@ inline void _assert(const char* expression, const char* file, int line)
 
 int main( int argc, const char* argv[] )
 {
-  char buffer[NMEA_MAX_LENGTH];
+  char buffer[MAX_SENTENCE_LENGTH];
 
   { // ftoa
     assert(strcmp(ftoa(12345.67890, buffer, 2), "12345.67") == 0);
@@ -65,7 +66,7 @@ int main( int argc, const char* argv[] )
   for (int i = 0; i < 1000; i++) {
     courseComputer.putSentence(GPRMC_SAMPLE);
     courseComputer.putSentence(GPWPL_SAMPLE);
-    courseComputer.getSentence(buffer, NMEA_MAX_LENGTH);
+    courseComputer.getSentence(buffer, MAX_SENTENCE_LENGTH);
     //printf("%s\n", buffer);
     assert(bwc.set(buffer));
   }
@@ -81,7 +82,7 @@ int main( int argc, const char* argv[] )
     mwv.reference = 'R';
     mwv.windSpeed = 12.3;
     mwv.windSpeedUnits = 'K';
-    mwv.get(buffer, NMEA_MAX_LENGTH);
+    mwv.get(buffer, MAX_SENTENCE_LENGTH);
     assert(strcmp(buffer, "$WIMWV,123.4,R,12.3,K,A*12") == 0);
   }
 
@@ -94,7 +95,7 @@ int main( int argc, const char* argv[] )
     hdg.magneticHeading = 123.4;
     hdg.magneticDeviation = -12.3;
     hdg.magneticVariation = -23.4;
-    hdg.get(buffer, NMEA_MAX_LENGTH);
+    hdg.get(buffer, MAX_SENTENCE_LENGTH);
     //printf("%s\n", buffer);
     assert(strcmp(buffer, "$HCHDG,123.4,12.3,E,23.3,E*44") == 0);
   }
@@ -103,13 +104,24 @@ int main( int argc, const char* argv[] )
     PWMSentence pwm;
     pwm.set(RCPWM_SAMPLE);
     assert(pwm.channel == 1);
-    assert(pwm.value == 1500);
+    assert(pwm.pulse == 1500);
     pwm.channel = 2;
-    pwm.value = 123;
-    pwm.get(buffer, NMEA_MAX_LENGTH);
+    pwm.pulse = 123;
+    pwm.get(buffer, MAX_SENTENCE_LENGTH);
     //printf("%s\n", buffer);
     assert(strcmp(buffer, "$RCPWM,2,123*59") == 0);
   }
 
+  {
+    MCSSentence mcs;
+    mcs.set(ERMCS_SAMPLE);
+    assert(mcs.motor == 1);
+    assert(strcmp(ftoa(mcs.current, buffer, 3), "0.321") == 0);
+    mcs.motor = 2;
+    mcs.current = 0.123;
+    mcs.get(buffer, MAX_SENTENCE_LENGTH);
+    //printf("%s\n", buffer);
+    assert(strcmp(buffer, "$ERMCS,2,0.123*56") == 0);
+  }
   return 0;
 }

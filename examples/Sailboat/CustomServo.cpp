@@ -21,16 +21,25 @@
 #include <Arduino.h>
 #include "CustomServo.h"
 
-#define PWM_CENTER 1500 //microseconds
-#define PWM_NOISE  10   //microseconds
+float volt_per_amp = 1.65; // resolution according to hardware page
 
-CustomServo::CustomServo(int channel, int pwmPin, int directionPin) :
-    Instrument("ER"), channel(channel), pwmPin(pwmPin), directionPin(directionPin) {
+CustomServo::CustomServo(int channel, int pwmPin, int directionPin, int currentSensingPin) :
+    Instrument(TALKER_ER), channel(channel), pwmPin(pwmPin), directionPin(directionPin),
+    currentSensingPin(currentSensingPin) {
   pinMode(pwmPin, OUTPUT);
   pinMode(directionPin, OUTPUT);
 }
 
 CustomServo::~CustomServo() {
+}
+
+char* CustomServo::getSentence(char sentence[], size_t maxSize) {
+  MCSSentence mcs;
+  mcs.motor = channel;
+  float currentRaw = analogRead(currentSensingPin);
+  float currentVolts = currentRaw * (5.0 / 1024.0);
+  mcs.current = currentVolts / volt_per_amp;
+  return mcs.get(sentence, maxSize);
 }
 
 bool CustomServo::putSentence(const char sentence[]) {
@@ -42,14 +51,14 @@ bool CustomServo::putSentence(const char sentence[]) {
   if (pwm.channel != channel)
     return false;
 
-  if (pwm.value == 0) {
+  if (pwm.pulse == 0) {
     //No RC signal
     analogWrite(pwmPin, 0);
-  } else if (pwm.value > PWM_CENTER + PWM_NOISE) {
-    analogWrite(pwmPin, min((pwm.value - PWM_CENTER)/2, 255));
+  } else if (pwm.pulse > PWM_CENTER + PWM_NOISE) {
+    analogWrite(pwmPin, min((pwm.pulse - PWM_CENTER)/2, 255));
     digitalWrite(directionPin, HIGH);
-  } else if (pwm.value < PWM_CENTER - PWM_NOISE) {
-    analogWrite(pwmPin, min((PWM_CENTER - pwm.value)/2, 255));
+  } else if (pwm.pulse < PWM_CENTER - PWM_NOISE) {
+    analogWrite(pwmPin, min((PWM_CENTER - pwm.pulse)/2, 255));
     digitalWrite(directionPin, LOW);
   } else {
     analogWrite(pwmPin, 0);

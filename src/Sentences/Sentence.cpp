@@ -1,11 +1,9 @@
 /*
- * NMEASentence.cpp
+ * Sentence.cpp
  * 
- * NMEA sentences parsing and construction.
+ * Sentences parsing and construction.
  * 
- * http://www.catb.org/gpsd/NMEA.html 
- *  
-  * (C) Copyright 2016 Pavel Bobov.
+ * (C) Copyright 2016 Pavel Bobov.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +19,7 @@
  */
 
 #include <string.h>
-#include "Sentence.h"
+#include "Sentences.h"
 
 /*
  * Converts numbers 0-15 to hex digit characters '0'-'F'

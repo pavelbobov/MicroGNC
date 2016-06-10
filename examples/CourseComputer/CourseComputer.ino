@@ -54,7 +54,7 @@ CourseComputer courseComputer;
 
 Bus bus;
 
-char buffer[NMEA_MAX_LENGTH];
+char buffer[MAX_SENTENCE_LENGTH];
 
 RMCSentence rmc;
 WPLSentence wpl;

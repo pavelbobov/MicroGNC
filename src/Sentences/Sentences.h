@@ -1,10 +1,11 @@
 /*
- * Nmea.h
+ * Sentences.h
  * 
- * Parsing and construction of some NMEA 0183 sentences.
+ * Parsing and construction of sentences.
  * 
- * The specification of NMEA sentences is based on publicly available sources,
- * such as http://www.catb.org/gpsd/NMEA.html. 
+ * Format of some sentences is similar to NMEA sentences described on
+ * publicly available sources, such as http://www.catb.org/gpsd/NMEA.html.
+ * An exact match to NMEA specifications is not guaranteed.
  *  
  * (C) Copyright 2016 Pavel Bobov.
  *
@@ -27,32 +28,104 @@
 #include <stdlib.h>
 #include "Chrono.h"
 #include "Geo.h"
-#include "Sentence.h"
 
-//NMEA sentences tags
-#define NMEA_RMC  "RMC" //Recommended Minimum Navigation Information
-#define NMEA_WPL  "WPL" //Waypoint Location
-#define NMEA_BWC  "BWC" //Bearing & Distance to Waypoint - Great Circle
-#define NMEA_MWV  "MWV" //Wind Speed and Angle
-#define NMEA_HDG  "HDG" //Heading - Deviation & Variation
-//Proprietary tags
-#define NMEA_PWM  "PWM" //Remote Control Pulse Width Modulation
+//Sentences tags
+#define TAG_RMC   "RMC" //Recommended Minimum Navigation Information
+#define TAG_WPL   "WPL" //Waypoint Location
+#define TAG_BWC   "BWC" //Bearing & Distance to Waypoint - Great Circle
+#define TAG_MWV   "MWV" //Wind Speed and Angle
+#define TAG_HDG   "HDG" //Heading - Deviation & Variation
+#define TAG_PWM   "PWM" //Remote Control Pulse Width Modulation
+#define TAG_MCS   "MCS" //Motor Current Sensing
 
-//NMEA talker IDs
+//Talker IDs
 #define TALKER_WI "WI"  //Weather Instrument
 #define TALKER_GP "GP"  //GPS
 #define TALKER_RC "RC"  //Radio Control
 #define TALKER_HC "HC"  //Heading - Magnetic Compass
 #define TALKER_IN "IN"  //Integrated Navigation
+#define TALKER_ER "ER"  //Engine Room
 
 //Code strings
-#define NORTH "N"
-#define SOUTH "S"
-#define EAST  "E"
-#define WEST  "W"
+#define NORTH     "N"
+#define SOUTH     "S"
+#define EAST      "E"
+#define WEST      "W"
 
-#define NMEA_MAX_LENGTH  83
-#define NMEA_MAX_WAYPOINT_NAME_LENGTH 10
+#define MAX_SENTENCE_LENGTH  83
+#define MAX_WAYPOINT_NAME_LENGTH 10
+
+/*
+ * Base class for sentences
+ *
+ */
+class Sentence {
+protected:
+  /*
+   * Constructor
+   *
+   * @param talker talker ID
+   * @param tag tag
+   */
+  Sentence(const char talker[], const char tag[]);
+
+public:
+  /*
+   * Destructor
+   */
+  virtual ~Sentence();
+
+  /*
+   * Implementations of this method must copy sentence to the specified buffer
+   *
+   * @param buffer buffer
+   * @param buflen buffer size.
+   * @return sentence or NULL if the buffer size is insufficient.
+   */
+  virtual char* get(char buffer[], size_t buflen) const = 0;
+
+  /*
+   * Implementations of this method must change the sentence to the specified string
+   * if the string is a valid sentence and the sentence tag matches the tag of the string.
+   *
+   * @param str sentence
+   * @return true if the sentence was changed
+   */
+  virtual bool  set(const char str[]) = 0;
+
+protected:
+  /*
+   * Talker ID - a two-character prefix that identifies
+   * the type of the transmitting unit.
+   */
+  const char* talker;
+
+  /*
+   * Sentence tag - a three character string that
+   * identifies the type of sentence.
+   */
+  const char* tag;
+
+  /*
+   * Returns true if tag of the sentence matches tag of the member variable
+   */
+  bool  matches(const char str[]);
+
+  /*
+   * Adds $<talker><tag> to the end of the string
+   */
+  char* addHead(char str[]) const;
+
+  /*
+   * returns true if checksum at the end of the sentence is valid
+   */
+  static bool  valid(const char str[]);
+
+  /*
+   * Calculates sentence checksum and adds it to the end of the string
+   */
+  static char* addChecksum(char str[]);
+};
 
 /*
  * RMC - Recommended Minimum Navigation Information
@@ -119,7 +192,7 @@ public:
 class WPLSentence : public Sentence {
 public:  
   Point  waypoint;
-  char   name[NMEA_MAX_WAYPOINT_NAME_LENGTH + 1];
+  char   name[MAX_WAYPOINT_NAME_LENGTH + 1];
 
   WPLSentence();
   ~WPLSentence();
@@ -162,7 +235,7 @@ public:
   float    bearingTrue;
   float    bearingMagnetic;
   float    distance;
-  char     waypointId[NMEA_MAX_WAYPOINT_NAME_LENGTH + 1];
+  char     waypointId[MAX_WAYPOINT_NAME_LENGTH + 1];
   
   BWCSentence();
   ~BWCSentence();
@@ -234,6 +307,7 @@ public:
  *        1  3
  *        |  |
  * $RCPWM,x,xxxx*hh<CR><LF>
+ *
  * Field Number:
  * 1. Channel number
  * 2. Channel PWM value
@@ -244,10 +318,34 @@ public:
 class PWMSentence : public Sentence {
 public:
   int  channel;
-  int  value;
+  int  pulse;
 
   PWMSentence();
   ~PWMSentence();
+
+  char*  get(char buffer[], size_t buflen) const;
+  bool   set(const char str[]);
+};
+
+/*
+ * MSC - Motor Current Sensing
+ *
+ * $ERMCS,x,x.xxx*hh<CR><LF>
+ *
+ * Field Number:
+ * 1. Motor number
+ * 2. Current in Ampers
+ * 3. Checksum
+ *
+ * Example: $ERMCS,1,0.080*5D
+ */
+class MCSSentence : public Sentence {
+public:
+  int motor;
+  float current;
+
+  MCSSentence();
+  ~MCSSentence();
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);

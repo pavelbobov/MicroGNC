@@ -19,10 +19,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include "Nmea.h"
+
+#include "Sentences.h"
 #include "StrUtils.h"
 
-BWCSentence::BWCSentence() : Sentence(TALKER_GP, NMEA_BWC),
+BWCSentence::BWCSentence() : Sentence(TALKER_GP, TAG_BWC),
                              milliseconds(0), bearingTrue(-1),
                              bearingMagnetic(-1), distance(-1) {
   waypointId[0] = '\0';
@@ -32,7 +33,7 @@ BWCSentence::~BWCSentence() {
 }
 
 char* BWCSentence::get(char str[], size_t buflen) const {
-  if (str == NULL || buflen < NMEA_MAX_LENGTH)
+  if (str == NULL || buflen < MAX_SENTENCE_LENGTH)
     return NULL;
     
   addHead(str);
@@ -77,14 +78,14 @@ char* BWCSentence::get(char str[], size_t buflen) const {
   return addChecksum(str);
 }
 
-bool BWCSentence::set(const char nmea[]) {
-  if (!valid(nmea))
+bool BWCSentence::set(const char str[]) {
+  if (!valid(str))
     return false;
 
-  if (!matches(nmea))
+  if (!matches(str))
     return false;
   
-  const char *p = nmea;
+  const char *p = str;
 
   // get time
   p = nextToken(p);
