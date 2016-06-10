@@ -12,7 +12,7 @@
 #define WIMWV_SAMPLE "$WIMWV,214.8,R,0.1,K,A*28"
 #define HCHDG_SAMPLE "$HCHDG,98.3,0.0,E,12.6,W*57"
 #define RCPWM_SAMPLE "$RCPWM,1,1500*6E"
-#define ERMCS_SAMPLE "$ERMCS,1,0.080*5D"
+#define ERMCS_SAMPLE "$ERMCS,1,0.321*55"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -116,7 +116,7 @@ int main( int argc, const char* argv[] )
     MCSSentence mcs;
     mcs.set(ERMCS_SAMPLE);
     assert(mcs.motor == 1);
-    assert(strcmp(ftoa(mcs.current, buffer, 2), "0.07") == 0);
+    assert(strcmp(ftoa(mcs.current, buffer, 3), "0.321") == 0);
     mcs.motor = 2;
     mcs.current = 0.123;
     mcs.get(buffer, MAX_SENTENCE_LENGTH);
