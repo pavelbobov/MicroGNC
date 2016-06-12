@@ -66,6 +66,7 @@
 
 SoftwareSerial gpsSerial(GPS_TX, GPS_RX);
 StreamTalker gps("GP", &gpsSerial);
+MPU9250AHRS ahrs;
 SoftwareSerial teleSerial(TELE_TX, TELE_RX);
 StreamTalker serial("UP", &teleSerial);
 //CourseComputer courseComputer;
@@ -100,11 +101,15 @@ void setup()
   gps.addFilter("$PMTK");
 
   serial.addFilter("$GP");
+  serial.addFilter("$HC");
   serial.addFilter("$WI");
   //courseComputer.putSentence(GPWPL_SAMPLE);
 
+  ahrs.init();
+  
   bus.subscribe(&windSensor);
   bus.subscribe(&gps);
+  bus.subscribe(&ahrs);
   //bus.subscribe(&courseComputer);
   bus.subscribe(&serial);
   bus.subscribe(&ch1);

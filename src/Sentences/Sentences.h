@@ -35,6 +35,7 @@
 #define TAG_BWC   "BWC" //Bearing & Distance to Waypoint - Great Circle
 #define TAG_MWV   "MWV" //Wind Speed and Angle
 #define TAG_HDG   "HDG" //Heading - Deviation & Variation
+#define TAG_MAG   "MAG" //Raw 3-axis magnetometer data
 #define TAG_PWM   "PWM" //Remote Control Pulse Width Modulation
 #define TAG_MCS   "MCS" //Motor Current Sensing
 
@@ -297,6 +298,33 @@ public:
 
   HDGSentence();
   ~HDGSentence();
+
+  char*  get(char buffer[], size_t buflen) const;
+  bool   set(const char str[]);
+};
+
+/*
+ * MAG - Raw 3-axis magnetometer data
+ *          1      2    3   4
+ *          |      |    |   |
+ * $HCMAG,x.xxx,x.xxx,x.xxx*hh<CR><LF>
+ *
+ * Field Number:
+ * 1. x-value
+ * 2. y-value
+ * 3. z-value
+ * 4. Checksum
+ *
+ * Example: $HCMAG,0.123,12.345,0.234*76
+ */
+class MAGSentence : public Sentence {
+public:
+  float mx;
+  float my;
+  float mz;
+
+  MAGSentence();
+  ~MAGSentence();
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);
