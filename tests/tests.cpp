@@ -13,7 +13,7 @@
 #define HCHDG_SAMPLE "$HCHDG,98.3,0.0,E,12.6,W*57"
 #define RCPWM_SAMPLE "$RCPWM,1,1500*6E"
 #define ERMCS_SAMPLE "$ERMCS,1,0.321*55"
-#define HCMAG_SAMPLE "$HCMAG,0.123,12.345,0.234*76"
+#define HCMAG_SAMPLE "$HCMAG,0.123,12.345,0.321*73"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -130,7 +130,7 @@ int main( int argc, const char* argv[] )
     mag.set(HCMAG_SAMPLE);
     assert(strcmp(ftoa(mag.mx, buffer, 3), "0.123") == 0);
     assert(strcmp(ftoa(mag.my, buffer, 3), "12.345") == 0);
-    assert(strcmp(ftoa(mag.mz, buffer, 3), "0.233") == 0);
+    assert(strcmp(ftoa(mag.mz, buffer, 3), "0.321") == 0);
     mag.mx = 0.321;
     mag.my = 54.321;
     mag.mz = 0.432;
