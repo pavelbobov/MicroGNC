@@ -26,6 +26,7 @@
 #include "Instruments/StreamTalker.h"
 #include "Instruments/CourseComputer.h"
 #include "Instruments/RCChannel.h"
+#include "Instruments/MPU9250AHRS.h"
 #include "Sentences/Sentences.h"
 
 #endif
