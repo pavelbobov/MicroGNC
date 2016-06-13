@@ -11,7 +11,7 @@
 #include "Instrument.h"
 
 #define PWM_CENTER 1500 //microseconds
-#define PWM_NOISE  10   //microseconds
+#define PWM_NOISE  20   //microseconds
 
 /*
  * Reads input from radio controller receiver
@@ -20,6 +20,7 @@ class RCChannel: public Instrument {
 
   int channel;
   int pin;
+  int readings[3];
 
 public:
   /*
