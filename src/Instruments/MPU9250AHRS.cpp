@@ -28,7 +28,7 @@ void MPU9250AHRS::init() {
   {
     //MPU9250SelfTest(SelfTest); // Start by performing self test and reporting values
 
-    calibrateMPU9250(gyroBias, accelBias); // Calibrate gyro and accelerometers, load biases in bias registers
+    //calibrateMPU9250(gyroBias, accelBias); // Calibrate gyro and accelerometers, load biases in bias registers
 
     delay(1000);
 
@@ -51,15 +51,13 @@ void MPU9250AHRS::init() {
 }
 
 char* MPU9250AHRS::getSentence(char sentence[], size_t maxSize) {
-  MAGSentence mag;
+  float mx, my, mz;
 
-  getMagData(&mag.mx, &mag.my, &mag.mz);
-
-  //return mag.get(sentence, maxSize);
+  getMagData(&mx, &my, &mz);
 
   HDGSentence hdg;
 
-  hdg.magneticHeading = fmod(540.0 - atan2(mag.my, mag.mx) / M_PI * 180, 360.0);
+  hdg.magneticHeading = fmod(540.0 - atan2(my, mx) * RAD_TO_DEG, 360.0);
 
   return hdg.get(sentence, maxSize);
 }
@@ -113,16 +111,13 @@ void MPU9250AHRS::calibrateMPU9250(float * dest1, float * dest2)
   packet_count = fifo_count/12;// How many sets of full gyro and accelerometer data for averaging
 
   for (ii = 0; ii < packet_count; ii++) {
-    int16_t accel_temp[3] = {
-      0, 0, 0                }
-    , gyro_temp[3] = {
-      0, 0, 0                };
+    int16_t accel_temp[3] = {0, 0, 0}, gyro_temp[3] = {0, 0, 0 };
     readBytes(MPU9250_ADDRESS, FIFO_R_W, 12, &data[0]); // read data for averaging
-    accel_temp[0] = (int16_t) (((int16_t)data[0] << 8) | data[1]  ) ;  // Form signed 16-bit integer for each sample in FIFO
-    accel_temp[1] = (int16_t) (((int16_t)data[2] << 8) | data[3]  ) ;
-    accel_temp[2] = (int16_t) (((int16_t)data[4] << 8) | data[5]  ) ;
-    gyro_temp[0]  = (int16_t) (((int16_t)data[6] << 8) | data[7]  ) ;
-    gyro_temp[1]  = (int16_t) (((int16_t)data[8] << 8) | data[9]  ) ;
+    accel_temp[0] = (int16_t) (((int16_t)data[0] << 8) | data[1]) ;  // Form signed 16-bit integer for each sample in FIFO
+    accel_temp[1] = (int16_t) (((int16_t)data[2] << 8) | data[3]) ;
+    accel_temp[2] = (int16_t) (((int16_t)data[4] << 8) | data[5]) ;
+    gyro_temp[0]  = (int16_t) (((int16_t)data[6] << 8) | data[7]) ;
+    gyro_temp[1]  = (int16_t) (((int16_t)data[8] << 8) | data[9]) ;
     gyro_temp[2]  = (int16_t) (((int16_t)data[10] << 8) | data[11]) ;
 
     accel_bias[0] += (int32_t) accel_temp[0]; // Sum individual signed 16-bit biases to get accumulated signed 32-bit biases
@@ -131,7 +126,6 @@ void MPU9250AHRS::calibrateMPU9250(float * dest1, float * dest2)
     gyro_bias[0]  += (int32_t) gyro_temp[0];
     gyro_bias[1]  += (int32_t) gyro_temp[1];
     gyro_bias[2]  += (int32_t) gyro_temp[2];
-
   }
   accel_bias[0] /= (int32_t) packet_count; // Normalize sums to get average count biases
   accel_bias[1] /= (int32_t) packet_count;
@@ -332,9 +326,9 @@ void MPU9250AHRS::getMagData(float* mx, float* my, float* mz)
 
   // Calculate the magnetometer values in milliGauss
   // Include factory calibration per data sheet and user environmental corrections
-  *mx = (float)magCount[0]*mRes*magCalibration[0] - magbias[0];  // get actual magnetometer value, this depends on scale being set
-  *my = (float)magCount[1]*mRes*magCalibration[1] - magbias[1];
-  *mz = (float)magCount[2]*mRes*magCalibration[2] - magbias[2];
+  *mx = (float)magCount[0] * mRes * magCalibration[0] - magbias[0];  // get actual magnetometer value, this depends on scale being set
+  *my = (float)magCount[1] * mRes * magCalibration[1] - magbias[1];
+  *mz = (float)magCount[2] * mRes * magCalibration[2] - magbias[2];
 }
 
 void MPU9250AHRS::getTempData(float* temp)

@@ -45,24 +45,22 @@ char* CustomServo::getSentence(char sentence[], size_t maxSize) {
 bool CustomServo::putSentence(const char sentence[]) {
   PWMSentence pwm;
 
-  if (!pwm.set(sentence))
+  if (!pwm.set(sentence) || pwm.channel != channel)
     return false;
 
-  if (pwm.channel != channel)
-    return false;
+  int speed =  0;
 
   if (pwm.pulse == 0) {
     //No RC signal
-    analogWrite(pwmPin, 0);
   } else if (pwm.pulse > PWM_CENTER + PWM_NOISE) {
-    analogWrite(pwmPin, min((pwm.pulse - PWM_CENTER)/2, 255));
+    speed = min((pwm.pulse - PWM_CENTER)/2, 255);
     digitalWrite(directionPin, HIGH);
   } else if (pwm.pulse < PWM_CENTER - PWM_NOISE) {
-    analogWrite(pwmPin, min((PWM_CENTER - pwm.pulse)/2, 255));
+    speed = min((PWM_CENTER - pwm.pulse)/2, 255);
     digitalWrite(directionPin, LOW);
-  } else {
-    analogWrite(pwmPin, 0);
   }
+
+  analogWrite(pwmPin, speed);
 
   return true;
 }

@@ -124,44 +124,9 @@ void loop()
   
   bus.exchange();
 
-//  int a0 = analogRead(A0);
-//  teleSerial.print("A0 = "); 
-//  teleSerial.println(a0);
-//  int a1 = analogRead(A1);
-//  teleSerial.print("A1 = "); 
-//  teleSerial.println(a1);
-//	int ch1 = pulseIn(RUDDER_RC, HIGH, 25000);
-//	if ((ch1 > 900 && ch1 < 1450) || ch1 > 1550) {
-//	  
-//	  teleSerial.print("ch1 = "); 
-//	  teleSerial.println(ch1);
-//	  delay(10);
-//	  ch1 = pulseIn(RUDDER_RC, HIGH, 25000);
-//      teleSerial.print("*ch1 = "); 
-//	  teleSerial.println(ch1);
-//	  delay(10);
-//	  ch1 = pulseIn(RUDDER_RC, HIGH, 25000);
-//      teleSerial.print("*ch1 = "); 
-//	  teleSerial.println(ch1);
-//	}
-//	
-//	int ch2 = pulseIn(WINCH_RC, HIGH, 25000);
-//	if ((ch2 > 900 && ch2 < 1450) || ch2 > 1550) {
-//	  teleSerial.print("ch2 = "); 
-//	  teleSerial.println(ch2);
-//	  delay(10);
-//	  ch2 = pulseIn(RUDDER_RC, HIGH, 25000);
-//      teleSerial.print("*ch2 = "); 
-//	  teleSerial.println(ch2);
-//	  delay(10);
-//	  ch2 = pulseIn(RUDDER_RC, HIGH, 25000);
-//      teleSerial.print("*ch2 = "); 
-//	  teleSerial.println(ch2);
-//	}
-  
-//  unsigned long elapsed = millis() - t;
-//  if (elapsed > 100) {
-//    teleSerial.print("t = "); 
-//    teleSerial.println(elapsed);
-//  }
+  //unsigned long elapsed = millis() - t;
+  //if (elapsed > 100) {
+  //  teleSerial.print("t = "); 
+  //  teleSerial.println(elapsed);
+  //}
 }
