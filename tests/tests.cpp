@@ -14,6 +14,7 @@
 #define RCPWM_SAMPLE "$RCPWM,1,1500*6E"
 #define ERMCS_SAMPLE "$ERMCS,1,0.321*55"
 #define HCMAG_SAMPLE "$HCMAG,0.123,12.345,0.321*73"
+#define ERRSA_SAMPLE "$ERRSA,12.3,A,23.4,A*52"
 
 #ifdef NDEBUG
 #define assert(EXPRESSION) ((void)0)
@@ -137,6 +138,18 @@ int main( int argc, const char* argv[] )
     mag.get(buffer, MAX_SENTENCE_LENGTH);
     //printf("%s\n", buffer);
     assert(strcmp(buffer, "$HCMAG,0.321,54.320,0.432*77") == 0);
+  }
+
+  {
+    RSASentence rsa;
+    rsa.set(ERRSA_SAMPLE);
+    assert(strcmp(ftoa(rsa.starboardRudderAngle, buffer, 1), "12.3") == 0);
+    assert(strcmp(ftoa(rsa.portRudderAngle, buffer, 1), "23.3") == 0);
+    rsa.starboardRudderAngle = 13.2;
+    rsa.portRudderAngle = 32.1;
+    rsa.get(buffer, MAX_SENTENCE_LENGTH);
+    printf("%s\n", buffer);
+    assert(strcmp(buffer, "$ERRSA,13.1,A,32.0,A*55") == 0);
   }
 
   return 0;
