@@ -66,7 +66,7 @@
 
 SoftwareSerial gpsSerial(GPS_TX, GPS_RX);
 StreamTalker gps("GP", &gpsSerial);
-MPU9250AHRS ahrs;
+AHRS ahrs;
 SoftwareSerial teleSerial(TELE_TX, TELE_RX);
 StreamTalker serial("UP", &teleSerial);
 //CourseComputer courseComputer;

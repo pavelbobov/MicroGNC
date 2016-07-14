@@ -21,12 +21,12 @@
 #ifndef _MICROGNC_H_
 #define _MICROGNC_H_
 
+#include "Instruments/AHRS.h"
 #include "Instruments/Bus.h"
 #include "Instruments/Instrument.h"
 #include "Instruments/StreamTalker.h"
 #include "Instruments/CourseComputer.h"
 #include "Instruments/RCChannel.h"
-#include "Instruments/MPU9250AHRS.h"
 #include "Sentences/Sentences.h"
 
 #endif
