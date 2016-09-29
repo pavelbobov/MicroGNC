@@ -38,6 +38,7 @@
 #define TAG_MAG   "MAG" //Raw 3-axis magnetometer data
 #define TAG_PWM   "PWM" //Remote Control Pulse Width Modulation
 #define TAG_MCS   "MCS" //Motor Current Sensing
+#define TAG_RSA   "RSA" //Rudder Sensor Angle
 
 //Talker IDs
 #define TALKER_WI "WI"  //Weather Instrument
@@ -374,6 +375,30 @@ public:
 
   MCSSentence();
   ~MCSSentence();
+
+  char*  get(char buffer[], size_t buflen) const;
+  bool   set(const char str[]);
+};
+
+/*
+ * RSA - Rudder Sensor Angle
+ *        1   2 3   4 5
+ *        |   | |   | |
+ * $--RSA,x.x,A,x.x,A*hh<CR><LF>
+ * Field Number:
+ * 1. Starboard (or single) rudder sensor, "-" means Turn To Port
+ * 2. Status, A means data is valid
+ * 3. Port rudder sensor
+ * 4. Status, A means data is valid
+ * 5. Checksum
+ */
+class RSASentence : public Sentence {
+public:
+  float starboardRudderAngle;
+  float portRudderAngle;
+
+  RSASentence();
+  ~RSASentence();
 
   char*  get(char buffer[], size_t buflen) const;
   bool   set(const char str[]);
