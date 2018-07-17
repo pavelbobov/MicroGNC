@@ -7,24 +7,24 @@
 #######################################
 
 
-BWCSentence	    KEYWORD1
-Sentence	    KEYWORD1
-RMCSentence	    KEYWORD1
-WPLSentence	    KEYWORD1
-MessageBus      KEYWORD1
-Instrument      KEYWORD1
-Point           KEYWORD1
-StreamTalker    KEYWORD1
-CourseComputer  KEYWORD1
+BWCSentence	KEYWORD1
+Sentence	KEYWORD1
+RMCSentence	KEYWORD1
+WPLSentence	KEYWORD1
+MessageBus	KEYWORD1
+Instrument	KEYWORD1
+Point	KEYWORD1
+StreamTalker	KEYWORD1
+CourseComputer	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-getMessage	    KEYWORD2
-putMessage    	KEYWORD2
-subscribe    	KEYWORD2
-broadcast       KEYWORD2
-addFilter       KEYWORD2
+getMessage	KEYWORD2
+putMessage	KEYWORD2
+subscribe	KEYWORD2
+broadcast	KEYWORD2
+addFilter	KEYWORD2
 
 ######################################
 # Constants (LITERAL1)
